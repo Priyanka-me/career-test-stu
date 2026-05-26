@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Career Discovery Test — Find Your Ideal Career Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-dark: #3C3489;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-dark: #085041;
+    --pink: #993556;
+    --pink-light: #FBEAF0;
+    --pink-dark: #72243E;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --amber-dark: #633806;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-dark: #0C447C;
+    --gray-bg: #F7F7F5;
+    --gray-border: rgba(0,0,0,0.12);
+    --gray-border-strong: rgba(0,0,0,0.22);
+    --text-primary: #1a1a18;
+    --text-secondary: #5a5a55;
+    --text-tertiary: #9a9a94;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f4f4f1;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .container {
+    width: 100%;
+    max-width: 640px;
+    background: var(--bg-primary);
+    border-radius: 16px;
+    border: 0.5px solid var(--gray-border);
+    padding: 2rem;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Progress */
+  .progress-bar { height: 4px; background: var(--gray-border); border-radius: 2px; margin-bottom: 2rem; }
+  .progress-fill { height: 4px; background: var(--purple); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Intro */
+  .brand { font-size: 13px; font-weight: 500; color: var(--purple); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .intro-title { font-size: 26px; font-weight: 500; color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.3; }
+  .intro-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+  .intro-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 2rem; }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+  .meta-item i { font-size: 16px; }
+  .name-input {
+    width: 100%; padding: 12px 16px; border-radius: 10px;
+    border: 0.5px solid var(--gray-border-strong);
+    background: var(--bg-primary); color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    margin-bottom: 1rem; transition: border-color 0.15s;
+  }
+  .name-input:focus { outline: none; border-color: var(--purple); }
+  .divider { height: 0.5px; background: var(--gray-border); margin: 1.5rem 0; }
+
+  /* Buttons */
+  .btn {
+    padding: 12px 20px; border-radius: 10px; font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+    border: 0.5px solid var(--gray-border-strong); background: var(--bg-primary);
+    color: var(--text-primary);
+  }
+  .btn:hover { background: var(--bg-secondary); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .btn-primary:hover { background: var(--purple-dark); }
+  .btn-full { width: 100%; text-align: center; display: block; }
+
+  /* Quiz */
+  .q-label { font-size: 12px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .q-text { font-size: 18px; font-weight: 500; color: var(--text-primary); line-height: 1.5; margin-bottom: 1.5rem; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+  .opt-btn {
+    padding: 13px 16px; border-radius: 10px;
+    border: 0.5px solid var(--gray-border-strong);
+    background: var(--bg-primary); color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    cursor: pointer; text-align: left; transition: all 0.15s; line-height: 1.45;
+  }
+  .opt-btn:hover { background: var(--bg-secondary); border-color: var(--gray-border-strong); }
+  .opt-btn.selected { background: var(--purple-light); border-color: var(--purple); color: var(--purple-dark); }
+  .nav { display: flex; justify-content: space-between; align-items: center; }
+  .q-count { font-size: 13px; color: var(--text-tertiary); }
+
+  /* Result */
+  .result-header { text-align: center; padding: 1rem 0 1.5rem; }
+  .result-icon {
+    width: 64px; height: 64px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem; font-size: 28px;
+  }
+  .result-type { font-size: 22px; font-weight: 500; color: var(--text-primary); margin-bottom: 0.5rem; }
+  .result-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.7; max-width: 480px; margin: 0 auto; }
+  .section-title { font-size: 12px; font-weight: 500; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+  .section { margin-bottom: 1.5rem; }
+
+  .score-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .score-card { background: var(--bg-secondary); border-radius: 10px; padding: 14px; text-align: center; }
+  .score-num { font-size: 22px; font-weight: 500; }
+  .score-lbl { font-size: 11px; color: var(--text-secondary); margin-top: 3px; }
+
+  .career-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .career-tag { padding: 5px 13px; border-radius: 20px; font-size: 13px; font-weight: 500; }
+
+  .trait-row { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+  .trait-label { font-size: 13px; color: var(--text-secondary); min-width: 110px; }
+  .trait-bar-bg { flex: 1; height: 6px; background: var(--gray-border); border-radius: 3px; }
+  .trait-bar { height: 6px; border-radius: 3px; transition: width 0.7s ease; }
+  .trait-val { font-size: 12px; color: var(--text-secondary); min-width: 34px; text-align: right; }
+
+  .cta-box { background: var(--bg-secondary); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1rem; border: 0.5px solid var(--gray-border); }
+  .cta-title { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 0.4rem; }
+  .cta-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6; }
+
+  .restart-btn { background: none; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--text-tertiary); cursor: pointer; text-decoration: underline; display: block; margin: 0.5rem auto 0; }
+
+  /* Footer */
+  .footer { margin-top: 2rem; text-align: center; font-size: 12px; color: var(--text-tertiary); }
+
+  @media (max-width: 480px) {
+    body { padding: 0; }
+    .container { border-radius: 0; border: none; padding: 1.5rem 1.25rem; min-height: 100vh; }
+    .score-grid { grid-template-columns: repeat(2, 1fr); }
+    .intro-title { font-size: 22px; }
+    .q-text { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Intro Screen -->
+  <div class="screen active" id="screen-intro">
+    <div class="brand">Career Discovery Test</div>
+    <div class="intro-title">Find your ideal career path</div>
+    <div class="intro-sub">This test analyses your interests, personality, and work style to suggest careers genuinely suited to you — not just the popular ones. Based on the globally trusted RIASEC model.</div>
+    <div class="intro-meta">
+      <div class="meta-item"><i class="ti ti-clock"></i> 5–7 minutes</div>
+      <div class="meta-item"><i class="ti ti-help-circle"></i> 25 questions</div>
+      <div class="meta-item"><i class="ti ti-lock"></i> Free &amp; confidential</div>
+      <div class="meta-item"><i class="ti ti-device-mobile"></i> Works on phone</div>
+    </div>
+    <input class="name-input" id="student-name" type="text" placeholder="Your first name (optional)" />
+    <button class="btn btn-primary btn-full" onclick="startTest()">Start the test &rarr;</button>
+    <div class="divider"></div>
+    <p style="font-size:13px;color:var(--text-tertiary);text-align:center">Designed for Class 10, 11 &amp; 12 students and college freshers</p>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:4%"></div></div>
+    <div class="q-label" id="q-label">Question 1 of 25</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+    <div class="nav">
+      <button class="btn" id="btn-back" onclick="goBack()">Back</button>
+      <span class="q-count" id="q-count"></span>
+      <button class="btn btn-primary" id="btn-next" onclick="goNext()" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="screen" id="screen-result">
+    <div class="result-header">
+      <div class="result-icon" id="res-icon"></div>
+      <div class="result-type" id="res-type"></div>
+      <div class="result-sub" id="res-sub"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section">
+      <div class="section-title">Your personality breakdown</div>
+      <div class="score-grid" id="score-grid"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Career paths to explore</div>
+      <div class="career-tags" id="career-tags"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Your trait profile</div>
+      <div id="trait-bars"></div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="cta-box">
+      <div class="cta-title">Want a personalised career roadmap?</div>
+      <div class="cta-sub">Book a free 20-minute career clarity session. I will help you understand exactly which stream, college, and career path fits you best — based on your unique results.</div>
+      <!-- REPLACE THE HREF BELOW WITH YOUR BOOKING LINK OR WHATSAPP LINK -->
+      <a href="https://wa.me/91XXXXXXXXXX?text=Hi%2C%20I%20just%20took%20the%20career%20test%20and%20would%20like%20to%20book%20a%20free%20session" target="_blank" class="btn btn-primary btn-full" style="text-decoration:none;display:block;text-align:center">Book a free session &rarr;</a>
+    </div>
+
+    <button class="restart-btn" onclick="restartTest()">Retake the test</button>
+
+    <div class="footer">
+      <!-- REPLACE WITH YOUR NAME / BRAND -->
+      Designed by [Your Name] &bull; Career Coach for Students &amp; Professionals
+    </div>
+  </div>
+
+</div>
+
+<script>
+const questions=[{text:"When you have free time, what do you most enjoy doing?",options:[{label:"Building or fixing things with your hands",vals:{R:3}},{label:"Reading, researching, or solving puzzles",vals:{I:3}},{label:"Drawing, writing, making music, or creating",vals:{A:3}},{label:"Talking to people or helping someone out",vals:{S:3}},{label:"Organising events or leading a group activity",vals:{E:3}},{label:"Keeping things orderly and tracking details",vals:{C:3}}]},{text:"Which school subject do you genuinely enjoy the most?",options:[{label:"Physics, chemistry, or maths",vals:{R:2,I:1}},{label:"Biology or environmental science",vals:{I:2,S:1}},{label:"Arts, literature, or languages",vals:{A:3}},{label:"Psychology, sociology, or history",vals:{S:2,I:1}},{label:"Business studies or economics",vals:{E:3}},{label:"Accounts or computer applications",vals:{C:3}}]},{text:"If you had to pick a weekend project, which would you choose?",options:[{label:"Build a working model or repair something",vals:{R:3}},{label:"Conduct a science experiment or research a topic",vals:{I:3}},{label:"Design a poster, write a story, or compose music",vals:{A:3}},{label:"Volunteer at a local NGO or help a friend",vals:{S:3}},{label:"Start a small business or organise a fundraiser",vals:{E:3}},{label:"Maintain a budget planner or organise files",vals:{C:3}}]},{text:"In a group project, what role do you naturally take?",options:[{label:"The one who builds or makes the actual thing",vals:{R:2,C:1}},{label:"The one who researches and analyses the problem",vals:{I:3}},{label:"The one who comes up with creative ideas",vals:{A:3}},{label:"The one who keeps the team together and motivated",vals:{S:3}},{label:"The leader who delegates and drives results",vals:{E:3}},{label:"The one who plans the schedule and checks accuracy",vals:{C:3}}]},{text:"How do you prefer to work?",options:[{label:"Alone, with clear tasks and minimal meetings",vals:{R:2,C:1}},{label:"Independently, deep in research or analysis",vals:{I:3}},{label:"Freely, with space to experiment and create",vals:{A:3}},{label:"With people — the more interaction the better",vals:{S:3}},{label:"Leading a team toward a visible goal",vals:{E:3}},{label:"In a structured environment with clear processes",vals:{C:3}}]},{text:"What kind of problems excite you most?",options:[{label:"Technical or mechanical challenges",vals:{R:3}},{label:"Complex puzzles or unanswered scientific questions",vals:{I:3}},{label:"Challenges where creativity is the solution",vals:{A:3}},{label:"Human problems — relationships, mental health, community",vals:{S:3}},{label:"Business or market challenges",vals:{E:3}},{label:"Process and efficiency problems",vals:{C:3}}]},{text:"Which of these environments would make you happiest at work?",options:[{label:"Outdoors, labs, or on-site locations",vals:{R:3}},{label:"A quiet research lab or library",vals:{I:3}},{label:"A creative studio or open workspace",vals:{A:3}},{label:"A hospital, school, or community centre",vals:{S:3}},{label:"A fast-paced office or startup",vals:{E:3}},{label:"A corporate office with clear hierarchy",vals:{C:3}}]},{text:"How do you handle uncertainty?",options:[{label:"I prefer clear, practical solutions — less guessing",vals:{R:2,C:1}},{label:"I analyse until I find the most logical answer",vals:{I:3}},{label:"I embrace it — uncertainty sparks creativity",vals:{A:3}},{label:"I talk to others to find a way through",vals:{S:2,E:1}},{label:"I take charge and make a decision",vals:{E:3}},{label:"I make a plan and follow it step by step",vals:{C:3}}]},{text:"Which of these activities sounds most satisfying?",options:[{label:"Designing and building a machine or app",vals:{R:2,I:1}},{label:"Publishing a research paper or discovery",vals:{I:3}},{label:"Exhibiting your artwork or performing on stage",vals:{A:3}},{label:"Counselling someone through a difficult time",vals:{S:3}},{label:"Launching a product and watching it grow",vals:{E:3}},{label:"Completing a perfect financial audit",vals:{C:3}}]},{text:"What do friends or family say about you most often?",options:[{label:"That you are practical and good with your hands",vals:{R:2}},{label:"That you are curious and always asking questions",vals:{I:3}},{label:"That you are imaginative and original",vals:{A:3}},{label:"That you are kind and a good listener",vals:{S:3}},{label:"That you are confident and persuasive",vals:{E:3}},{label:"That you are organised and reliable",vals:{C:3}}]},{text:"What kind of impact do you want your career to have?",options:[{label:"Build things that improve everyday life",vals:{R:2,I:1}},{label:"Advance human knowledge and science",vals:{I:3}},{label:"Inspire people through art or storytelling",vals:{A:3}},{label:"Directly help individuals or communities",vals:{S:3}},{label:"Create jobs or drive economic growth",vals:{E:3}},{label:"Ensure systems run accurately and efficiently",vals:{C:3}}]},{text:"How do you feel about public speaking?",options:[{label:"I avoid it — I prefer hands-on or quiet work",vals:{R:2,I:1}},{label:"I can do it but prefer written communication",vals:{I:2,C:1}},{label:"I enjoy it when I am sharing something I have created",vals:{A:2}},{label:"I love it — connecting with people energises me",vals:{S:2,E:1}},{label:"I thrive on it — persuading people is natural to me",vals:{E:3}},{label:"I am comfortable when it is structured and prepared",vals:{C:2}}]},{text:"Which of these careers sounds most interesting to you right now?",options:[{label:"Civil engineer or architect",vals:{R:3}},{label:"Data scientist or doctor",vals:{I:3}},{label:"Filmmaker, designer, or author",vals:{A:3}},{label:"Teacher, psychologist, or social worker",vals:{S:3}},{label:"Entrepreneur or marketing manager",vals:{E:3}},{label:"Chartered accountant or financial analyst",vals:{C:3}}]},{text:"When learning something new, you prefer to:",options:[{label:"Try it out physically — learn by doing",vals:{R:3}},{label:"Read deeply and understand the theory first",vals:{I:3}},{label:"Experiment and find your own creative approach",vals:{A:3}},{label:"Learn from someone you trust or in a group",vals:{S:2}},{label:"Learn quickly and apply it to a goal",vals:{E:2}},{label:"Follow a structured course or guide step by step",vals:{C:3}}]},{text:"How important is job security to you?",options:[{label:"Very important — I want a stable, predictable career",vals:{C:2,R:1}},{label:"Important, but I also want intellectual challenge",vals:{I:2}},{label:"Less important — I want creative freedom over safety",vals:{A:3}},{label:"Moderate — I want meaning more than security",vals:{S:2}},{label:"I will create my own security by building something",vals:{E:3}},{label:"Security matters but so does doing the right work",vals:{C:1,S:1}}]},{text:"Which of these describes your ideal day at work?",options:[{label:"Working with equipment, machines, or physical tasks",vals:{R:3}},{label:"Solving a complex problem at my desk independently",vals:{I:3}},{label:"A day full of creative freedom and experimentation",vals:{A:3}},{label:"Meaningful conversations and helping others",vals:{S:3}},{label:"Back-to-back meetings, pitching, and decisions",vals:{E:3}},{label:"Processing data, reports, and ensuring accuracy",vals:{C:3}}]},{text:"Which skill would you most like to master?",options:[{label:"Engineering or coding",vals:{R:2,I:1}},{label:"Research and critical thinking",vals:{I:3}},{label:"Storytelling or visual design",vals:{A:3}},{label:"Empathy and communication",vals:{S:3}},{label:"Leadership and negotiation",vals:{E:3}},{label:"Financial analysis or data management",vals:{C:3}}]},{text:"How do you feel about taking risks?",options:[{label:"I prefer calculated, practical decisions",vals:{R:2,C:1}},{label:"I take risks only after thorough research",vals:{I:3}},{label:"Risk excites me — especially creative risks",vals:{A:2,E:1}},{label:"I prefer to consult others before taking risks",vals:{S:2}},{label:"I take bold risks — that is how growth happens",vals:{E:3}},{label:"I minimise risk through planning and process",vals:{C:3}}]},{text:"Which of these best describes how you see yourself?",options:[{label:"Practical and realistic",vals:{R:3}},{label:"Analytical and curious",vals:{I:3}},{label:"Creative and expressive",vals:{A:3}},{label:"Warm and empathetic",vals:{S:3}},{label:"Ambitious and persuasive",vals:{E:3}},{label:"Detail-oriented and precise",vals:{C:3}}]},{text:"What motivates you most at work?",options:[{label:"Seeing a physical result of my work",vals:{R:3}},{label:"Understanding something deeply",vals:{I:3}},{label:"Expressing myself or producing something original",vals:{A:3}},{label:"Knowing I made a positive difference to someone",vals:{S:3}},{label:"Achieving targets and being recognised",vals:{E:3}},{label:"Completing tasks accurately and efficiently",vals:{C:3}}]},{text:"How do you handle a task you find boring?",options:[{label:"I focus on the practical outcome and just do it",vals:{R:2}},{label:"I find an intellectual angle to make it interesting",vals:{I:2}},{label:"I struggle — I need the work to feel creative",vals:{A:2}},{label:"I ask for help or collaborate to make it bearable",vals:{S:2}},{label:"I delegate or find a faster way through it",vals:{E:3}},{label:"I follow the process — boring tasks still need doing right",vals:{C:3}}]},{text:"Which of these famous people do you find most inspiring?",options:[{label:"Elon Musk or Satya Nadella — tech builders",vals:{R:2,E:1}},{label:"APJ Abdul Kalam or Marie Curie — scientist thinkers",vals:{I:3}},{label:"AR Rahman or Satyajit Ray — creative visionaries",vals:{A:3}},{label:"Mother Teresa or Kailash Satyarthi — humanitarians",vals:{S:3}},{label:"Ratan Tata or Narayana Murthy — business leaders",vals:{E:3}},{label:"Nirmala Sitharaman or Warren Buffett — finance leaders",vals:{C:3}}]},{text:"What matters most to you in a career?",options:[{label:"Doing meaningful, hands-on work",vals:{R:3}},{label:"Intellectual stimulation and discovery",vals:{I:3}},{label:"Creative freedom and self-expression",vals:{A:3}},{label:"Making a real difference in people's lives",vals:{S:3}},{label:"Growth, status, and financial reward",vals:{E:3}},{label:"Stability, structure, and accuracy",vals:{C:3}}]},{text:"Which type of content do you most enjoy?",options:[{label:"How-to guides, engineering, or technology",vals:{R:2,I:1}},{label:"Science, philosophy, or investigative journalism",vals:{I:3}},{label:"Fiction, art, poetry, or film",vals:{A:3}},{label:"Self-help, psychology, or biographies",vals:{S:3}},{label:"Business, entrepreneurship, or leadership",vals:{E:3}},{label:"Finance, strategy, or productivity",vals:{C:3}}]},{text:"Imagine your career 10 years from now — which future excites you most?",options:[{label:"Leading a technical team or running a lab",vals:{R:2,I:1}},{label:"Publishing research or being a subject expert",vals:{I:3}},{label:"Running a creative studio or winning awards",vals:{A:3}},{label:"Leading a nonprofit or impacting thousands of lives",vals:{S:3}},{label:"Running your own company or a senior leadership role",vals:{E:3}},{label:"Being a trusted financial or compliance expert",vals:{C:3}}]}];
+
+const profiles={
+  R:{name:"The Builder",color:"#0F6E56",bg:"#E1F5EE",icon:"ti-tool",desc:"You are practical, hands-on, and love working with real, tangible things. You thrive when you can see and touch the results of your work. Structure and practicality are your strengths.",careers:["Civil Engineering","Mechanical Engineering","Architecture","Product Design","Robotics & Automation","Aviation","Construction Management","Industrial Design"],tag_bg:"#E1F5EE",tag_color:"#085041"},
+  I:{name:"The Investigator",color:"#185FA5",bg:"#E6F1FB",icon:"ti-microscope",desc:"You are deeply curious, analytical, and love understanding how things work at a deeper level. Research, science, and complex problem-solving are where you naturally shine.",careers:["Medicine","Data Science","Research Scientist","Biotechnology","Pharmacy","Computer Science","Mathematics","Psychology"],tag_bg:"#E6F1FB",tag_color:"#0C447C"},
+  A:{name:"The Creator",color:"#993556",bg:"#FBEAF0",icon:"ti-palette",desc:"You are imaginative, expressive, and original. You see the world differently from others and love making things that evoke emotion — whether through design, writing, music, or film.",careers:["Graphic Design","UX/UI Design","Filmmaking","Architecture","Writing & Journalism","Fashion Design","Music","Advertising & Branding"],tag_bg:"#FBEAF0",tag_color:"#72243E"},
+  S:{name:"The Helper",color:"#0F6E56",bg:"#E1F5EE",icon:"ti-heart",desc:"You are empathetic, warm, and driven by a genuine desire to make a positive difference. Working with and for people is what gives your career meaning and energises you.",careers:["Psychology & Counselling","Teaching","Social Work","Medicine","HR Management","NGO Leadership","Nursing","Occupational Therapy"],tag_bg:"#E1F5EE",tag_color:"#085041"},
+  E:{name:"The Leader",color:"#854F0B",bg:"#FAEEDA",icon:"ti-rocket",desc:"You are ambitious, persuasive, and driven by results. You naturally take charge, inspire others, and thrive in competitive, goal-oriented environments where your impact is visible.",careers:["Entrepreneurship","Marketing & Sales","MBA & Management","Law","Investment Banking","Business Development","Politics & Policy","Media & PR"],tag_bg:"#FAEEDA",tag_color:"#633806"},
+  C:{name:"The Organiser",color:"#534AB7",bg:"#EEEDFE",icon:"ti-clipboard-list",desc:"You are precise, structured, and deeply reliable. You bring order to complex situations and take pride in accuracy, efficiency, and doing things right the very first time.",careers:["Chartered Accountancy","Finance & Banking","Company Secretary","Data Analytics","Operations Management","Audit & Compliance","Actuarial Science","Supply Chain"],tag_bg:"#EEEDFE",tag_color:"#3C3489"}
+};
+
+let current=0,answers={},scores={R:0,I:0,A:0,S:0,E:0,C:0};
+
+function startTest(){
+  current=0;answers={};scores={R:0,I:0,A:0,S:0,E:0,C:0};
+  document.getElementById("screen-intro").classList.remove("active");
+  document.getElementById("screen-quiz").classList.add("active");
+  renderQ();
+}
+
+function renderQ(){
+  const q=questions[current];
+  document.getElementById("q-label").textContent=`Question ${current+1} of ${questions.length}`;
+  document.getElementById("q-text").textContent=q.text;
+  document.getElementById("q-count").textContent=`${current+1} / ${questions.length}`;
+  document.getElementById("prog").style.width=`${Math.round(((current+1)/questions.length)*100)}%`;
+  const opts=document.getElementById("q-options");
+  opts.innerHTML="";
+  q.options.forEach((opt,i)=>{
+    const btn=document.createElement("button");
+    btn.className="opt-btn"+(answers[current]===i?" selected":"");
+    btn.textContent=opt.label;
+    btn.onclick=()=>selectOpt(i);
+    opts.appendChild(btn);
+  });
+  document.getElementById("btn-back").disabled=current===0;
+  document.getElementById("btn-next").disabled=answers[current]===undefined;
+  document.getElementById("btn-next").textContent=current===questions.length-1?"See my results":"Next";
+}
+
+function selectOpt(i){
+  answers[current]=i;
+  document.querySelectorAll(".opt-btn").forEach((b,idx)=>b.classList.toggle("selected",idx===i));
+  document.getElementById("btn-next").disabled=false;
+}
+
+function goNext(){
+  if(answers[current]!==undefined){
+    const opt=questions[current].options[answers[current]];
+    if(opt.vals)Object.entries(opt.vals).forEach(([k,v])=>{scores[k]=(scores[k]||0)+v;});
+  }
+  if(current===questions.length-1){showResult();return;}
+  current++;renderQ();
+}
+
+function goBack(){if(current>0){current--;renderQ();}}
+
+function showResult(){
+  document.getElementById("screen-quiz").classList.remove("active");
+  document.getElementById("screen-result").classList.add("active");
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const top=sorted[0][0];
+  const p=profiles[top];
+  const name=document.getElementById("student-name").value.trim();
+  const ri=document.getElementById("res-icon");
+  ri.style.background=p.bg;
+  ri.innerHTML=`<i class="ti ${p.icon}" style="font-size:28px;color:${p.color}"></i>`;
+  document.getElementById("res-type").textContent=(name?name+", you are ":"You are ")+p.name;
+  document.getElementById("res-sub").textContent=p.desc;
+  const total=Math.max(1,sorted.reduce((s,x)=>s+x[1],0));
+  document.getElementById("score-grid").innerHTML=sorted.map(([k,v])=>`<div class="score-card"><div class="score-num" style="color:${profiles[k].color}">${Math.round((v/total)*100)}%</div><div class="score-lbl">${profiles[k].name.replace("The ","")}</div></div>`).join("");
+  document.getElementById("career-tags").innerHTML=p.careers.map(c=>`<span class="career-tag" style="background:${p.tag_bg};color:${p.tag_color}">${c}</span>`).join("");
+  const traits=[["Creativity",scores.A,scores.R+scores.C],["People focus",scores.S,scores.I+scores.R],["Leadership",scores.E,scores.C+scores.I],["Structure",scores.C,scores.A+scores.E],["Curiosity",scores.I,scores.R+scores.C]];
+  document.getElementById("trait-bars").innerHTML=traits.map(([label,hi,lo])=>{
+    const pct=Math.round((hi/Math.max(1,hi+lo))*100);
+    return `<div class="trait-row"><span class="trait-label">${label}</span><div class="trait-bar-bg"><div class="trait-bar" style="width:${pct}%;background:${p.color}"></div></div><span class="trait-val">${pct}%</span></div>`;
+  }).join("");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function restartTest(){
+  document.getElementById("screen-result").classList.remove("active");
+  document.getElementById("screen-intro").classList.add("active");
+  document.getElementById("student-name").value="";
+  scores={R:0,I:0,A:0,S:0,E:0,C:0};answers={};
+}
+</script>
+</body>
+</html>
