@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Career Discovery Test — Find Your Ideal Career Path</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+
+<!-- EmailJS SDK Integration -->
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script type="text/javascript">
+  (function(){
+    // Fully configured public key for direct email delivery
+    emailjs.init("h_6_p_A7-FNDrby-w");
+  })();
+</script>
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --purple: #534AB7;
+    --purple-light: #EEEDFE;
+    --purple-dark: #3C3489;
+    --teal: #0F6E56;
+    --teal-light: #E1F5EE;
+    --teal-dark: #085041;
+    --pink: #993556;
+    --pink-light: #FBEAF0;
+    --pink-dark: #72243E;
+    --amber: #854F0B;
+    --amber-light: #FAEEDA;
+    --amber-dark: #633806;
+    --blue: #185FA5;
+    --blue-light: #E6F1FB;
+    --blue-dark: #0C447C;
+    --gray-bg: #F7F7F5;
+    --gray-border: rgba(0,0,0,0.12);
+    --gray-border-strong: rgba(0,0,0,0.22);
+    --text-primary: #1a1a18;
+    --text-secondary: #5a5a55;
+    --text-tertiary: #9a9a94;
+    --bg-primary: #ffffff;
+    --bg-secondary: #f4f4f1;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--gray-bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+  .container {
+    width: 100%;
+    max-width: 640px;
+    background: var(--bg-primary);
+    border-radius: 16px;
+    border: 0.5px solid var(--gray-border);
+    padding: 2rem;
+  }
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* Language Selector Bar */
+  .lang-selector {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .lang-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid var(--gray-border-strong);
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    transition: all 0.15s;
+  }
+  .lang-btn.active {
+    background: var(--purple);
+    color: #fff;
+    border-color: var(--purple);
+  }
+
+  /* Progress */
+  .progress-bar { height: 4px; background: var(--gray-border); border-radius: 2px; margin-bottom: 2rem; }
+  .progress-fill { height: 4px; background: var(--purple); border-radius: 2px; transition: width 0.3s ease; }
+
+  /* Intro Layout */
+  .brand { font-size: 13px; font-weight: 500; color: var(--purple); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.5rem; }
+  .intro-title { font-size: 26px; font-weight: 500; color: var(--text-primary); margin-bottom: 0.75rem; line-height: 1.3; }
+  .intro-sub { font-size: 15px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 1.5rem; }
+  .intro-meta { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 2rem; }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-secondary); }
+  .meta-item i { font-size: 16px; }
+  
+  /* Input Form Elements */
+  .form-group { margin-bottom: 1.25rem; text-align: left; }
+  .form-group label { display: block; font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.5rem; }
+  .data-input {
+    width: 100%; padding: 12px 16px; border-radius: 10px;
+    border: 0.5px solid var(--gray-border-strong);
+    background: var(--bg-primary); color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    transition: border-color 0.15s;
+  }
+  .data-input:focus { outline: none; border-color: var(--purple); }
+  .divider { height: 0.5px; background: var(--gray-border); margin: 1.5rem 0; }
+
+  /* Buttons */
+  .btn {
+    padding: 12px 20px; border-radius: 10px; font-size: 15px; font-weight: 500;
+    font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.15s;
+    border: 0.5px solid var(--gray-border-strong); background: var(--bg-primary);
+    color: var(--text-primary);
+  }
+  .btn:hover { background: var(--bg-secondary); }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.3; cursor: not-allowed; transform: none; }
+  .btn-primary { background: var(--purple); color: #fff; border-color: var(--purple); }
+  .btn-primary:hover { background: var(--purple-dark); }
+  .btn-full { width: 100%; text-align: center; display: block; }
+
+  /* Quiz Content styling */
+  .q-label { font-size: 12px; font-weight: 500; color: var(--text-tertiary); letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .q-text { font-size: 18px; font-weight: 500; color: var(--text-primary); line-height: 1.5; margin-bottom: 1.5rem; }
+  .options { display: flex; flex-direction: column; gap: 8px; margin-bottom: 2rem; }
+  .opt-btn {
+    padding: 13px 16px; border-radius: 10px;
+    border: 0.5px solid var(--gray-border-strong);
+    background: var(--bg-primary); color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    cursor: pointer; text-align: left; transition: all 0.15s; line-height: 1.45;
+  }
+  .opt-btn:hover { background: var(--bg-secondary); border-color: var(--gray-border-strong); }
+  .opt-btn.selected { background: var(--purple-light); border-color: var(--purple); color: var(--purple-dark); }
+  .nav { display: flex; justify-content: space-between; align-items: center; }
+  .q-count { font-size: 13px; color: var(--text-tertiary); }
+
+  /* Client-Facing Confirmation Styling */
+  .thanks-header { text-align: center; padding: 2.5rem 0; }
+  .thanks-icon {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--teal-light); color: var(--teal);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem; font-size: 36px;
+  }
+  .thanks-title { font-size: 24px; font-weight: 500; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.3; }
+  .thanks-sub { font-size: 16px; color: var(--text-secondary); line-height: 1.6; }
+
+  .footer { margin-top: 2rem; text-align: center; font-size: 12px; color: var(--text-tertiary); }
+
+  @media (max-width: 480px) {
+    body { padding: 0; }
+    .container { border-radius: 0; border: none; padding: 1.5rem 1.25rem; min-height: 100vh; }
+    .intro-title { font-size: 22px; }
+    .q-text { font-size: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Language Toggles -->
+  <div class="lang-selector" id="global-lang-selector">
+    <button class="lang-btn active" onclick="switchLanguage('en')">English</button>
+    <button class="lang-btn" onclick="switchLanguage('hi')">हिन्दी</button>
+    <button class="lang-btn" onclick="switchLanguage('mr')">मराठी</button>
+  </div>
+
+  <!-- Intro Screen -->
+  <div class="screen active" id="screen-intro">
+    <div class="brand" id="loc-brand">Career Discovery Test</div>
+    <div class="intro-title" id="loc-intro-title">Find your ideal career path</div>
+    <div class="intro-sub" id="loc-intro-sub">This test analyses your interests, personality, and work style to suggest careers genuinely suited to you — not just the popular ones. Based on the globally trusted RIASEC model.</div>
+    <div class="intro-meta">
+      <div class="meta-item"><i class="ti ti-clock"></i> <span id="loc-meta-time">5–7 minutes</span></div>
+      <div class="meta-item"><i class="ti ti-help-circle"></i> <span id="loc-meta-questions">25 questions</span></div>
+      <div class="meta-item"><i class="ti ti-lock"></i> <span id="loc-meta-privacy">Free &amp; confidential</span></div>
+      <div class="meta-item"><i class="ti ti-device-mobile"></i> <span id="loc-meta-device">Works on phone</span></div>
+    </div>
+    <button class="btn btn-primary btn-full" id="loc-btn-start" onclick="startTest()">Start the test &rarr;</button>
+    <div class="divider"></div>
+    <p style="font-size:13px;color:var(--text-tertiary);text-align:center" id="loc-intro-footer">Designed for Class 10, 11 &amp; 12 students and college freshers</p>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:4%"></div></div>
+    <div class="q-label" id="q-label">Question 1 of 25</div>
+    <div class="q-text" id="q-text"></div>
+    <div class="options" id="q-options"></div>
+    <div class="nav">
+      <button class="btn" id="btn-back" onclick="goBack()">Back</button>
+      <span class="q-count" id="q-count"></span>
+      <button class="btn btn-primary" id="btn-next" onclick="goNext()" disabled>Next</button>
+    </div>
+  </div>
+
+  <!-- Post-Quiz Details Input Form Screen -->
+  <div class="screen" id="screen-onboarding">
+    <div class="brand" id="loc-onboard-brand">Final Step</div>
+    <div class="intro-title" id="loc-onboard-title">Enter your details to complete submission</div>
+    <div style="height: 15px;"></div>
+    
+    <div class="form-group">
+      <label for="client-name" id="loc-lbl-name">Full Name *</label>
+      <input class="data-input" id="client-name" type="text" placeholder="Enter your full name" required oninput="validateOnboardingForm()" />
+    </div>
+
+    <div class="form-group">
+      <label for="client-class" id="loc-lbl-class">Class / Academic Level *</label>
+      <input class="data-input" id="client-class" type="text" placeholder="e.g., Class 10, Class 12, First Year B.Com" required oninput="validateOnboardingForm()" />
+    </div>
+
+    <div class="form-group">
+      <label for="client-phone" id="loc-lbl-phone">Phone Number *</label>
+      <input class="data-input" id="client-phone" type="tel" placeholder="Enter your 10-digit phone number" required oninput="validateOnboardingForm()" />
+    </div>
+
+    <div style="height: 10px;"></div>
+    <button class="btn btn-primary btn-full" id="btn-submit-test" onclick="processFinalSubmission()" disabled>Submit Test</button>
+  </div>
+
+  <!-- Secure Confirmation Success Screen (Hides results from client) -->
+  <div class="screen" id="screen-result">
+    <div class="thanks-header">
+      <div class="thanks-icon"><i class="ti ti-circle-check"></i></div>
+      <div class="thanks-title" id="loc-thanks-title">Your test is submitted successfully, thank you.</div>
+      <div class="thanks-sub" id="loc-thanks-sub">Contact your career coach for career analysis.</div>
+    </div>
+    <div class="divider"></div>
+    <div class="footer">
+      Designed for Strategic Career Mentorship &bull; Professional Coach Portal
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Language Translations Dictionary Matrix
+const uiLexicon = {
+  en: {
+    brand: "Career Discovery Test[cite: 1]",
+    title: "Find your ideal career path[cite: 1]",
+    sub: "This test analyses your interests, personality, and work style to suggest careers genuinely suited to you — not just the popular ones. Based on the globally trusted RIASEC model.[cite: 1]",
+    time: "5–7 minutes[cite: 1]",
+    questions: "25 questions[cite: 1]",
+    privacy: "Free & confidential[cite: 1]",
+    device: "Works on phone[cite: 1]",
+    startBtn: "Start the test \u2192[cite: 1]",
+    introFoot: "Designed for Class 10, 11 & 12 students and college freshers[cite: 1]",
+    qLabel: "Question",
+    qOf: "of",
+    btnBack: "Back[cite: 1]",
+    btnNext: "Next[cite: 1]",
+    btnFinish: "Proceed to Details",
+    onboardBrand: "Final Step",
+    onboardTitle: "Enter your details to complete submission",
+    lblName: "Full Name *",
+    lblClass: "Class / Academic Level *",
+    lblPhone: "Phone Number *",
+    phName: "Enter your full name",
+    phClass: "e.g., Class 10, Class 12, First Year B.Com",
+    phPhone: "Enter your 10-digit phone number",
+    btnSubmit: "Submit Test",
+    thanksTitle: "Your test is submitted successfully, thank you.",
+    thanksSub: "Contact your career coach for career analysis."
+  },
+  hi: {
+    brand: "करियर खोज परीक्षण",
+    title: "अपना आदर्श करियर पथ चुनें",
+    sub: "यह परीक्षण आपकी रुचियों, व्यक्तित्व और कार्यशैली का विश्लेषण करता है ताकि उन करियरों का सुझाव दिया जा सके जो वास्तव में आपके अनुकूल हैं - न कि केवल लोकप्रिय। विश्व स्तर पर विश्वसनीय RIASEC मॉडल पर आधारित।",
+    time: "5-7 मिनट",
+    questions: "25 प्रश्न",
+    privacy: "निःशुल्क और गोपनीय",
+    device: "फ़ोन पर काम करता है",
+    startBtn: "परीक्षण शुरू करें \u2192",
+    introFoot: "कक्षा 10, 11 और 12 के छात्रों और कॉलेज के नए छात्रों के लिए डिज़ाइन किया गया",
+    qLabel: "प्रश्न",
+    qOf: "का",
+    btnBack: "पीछे",
+    btnNext: "आगे",
+    btnFinish: "विवरण पर आगे बढ़ें",
+    onboardBrand: "अंतिम चरण",
+    onboardTitle: "सबमिशन पूरा करने के लिए अपना विवरण दर्ज करें",
+    lblName: "पूरा नाम *",
+    lblClass: "कक्षा / शैक्षणिक स्तर *",
+    lblPhone: "फ़ोन नंबर *",
+    phName: "अपना पूरा नाम दर्ज करें",
+    phClass: "जैसे, कक्षा 10, कक्षा 12, प्रथम वर्ष बी.कॉम",
+    phPhone: "अपना 10 अंकों का फ़ोन नंबर दर्ज करें",
+    btnSubmit: "परीक्षण सबमिट करें",
+    thanksTitle: "आपका परीक्षण सफलतापूर्वक सबमिट हो गया है, धन्यवाद।",
+    thanksSub: "करियर विश्लेषण के लिए अपने करियर कोच से संपर्क करें।"
+  },
+  mr: {
+    brand: "करिअर शोध चाचणी",
+    title: "तुमचा आदर्श करिअर मार्ग शोधा",
+    sub: "ही चाचणी तुमच्या आवडी, व्यक्तिमत्त्व आणि कार्यशैलीचे विश्लेषण करते जेणेकरून तुम्हाला खरोखरच योग्य असलेले करिअर सुचवले जाईल — केवळ लोकप्रिय पर्याय नाही. जागतिक स्तरावर विश्वसनीय RIASEC मॉडेलवर आधारित।",
+    time: "5-7 मिनिटे",
+    questions: "25 प्रश्न",
+    privacy: "मोफत आणि गोपनीय",
+    device: "मोबाईलवर चालते",
+    startBtn: "चाचणी सुरू करा \u2192",
+    introFoot: "इयत्ता 10, 11 आणि 12 वीचे विद्यार्थी आणि कॉलेज फ्रेशर्ससाठी डिझाइन केलेले",
+    qLabel: "प्रश्न",
+    qOf: "पैकी",
+    btnBack: "मागे",
+    btnNext: "पुढील",
+    btnFinish: "माहिती भरण्यासाठी पुढे जा",
+    onboardBrand: "अंतिम टप्पा",
+    onboardTitle: "सबमिशन पूर्ण करण्यासाठी तुमची माहिती प्रविष्ट करा",
+    lblName: "पूर्ण नाव *",
+    lblClass: "इयत्ता / शैक्षणिक पातळी *",
+    lblPhone: "फोन नंबर *",
+    phName: "तुमचे पूर्ण नाव प्रविष्ट करा",
+    phClass: "उदा. इयत्ता 10, इयत्ता 12, प्रथम वर्ष बी.कॉम",
+    phPhone: "तुमचा 10-अंकी फोन नंबर प्रविष्ट करा",
+    btnSubmit: "चाचणी सबमिट करा",
+    thanksTitle: "तुमची चाचणी यशस्वीरित्या सबमिट झाली आहे, धन्यवाद.",
+    thanksSub: "करिअर विश्लेषणासाठी तुमच्या करिअर कोचशी संपर्क साधा।"
+  }
+};
+
+// Questions Dataset with Built-in Language Mappings[cite: 1]
+const questions = [
+  {
+    text: {
+      en: "When you have free time, what do you most enjoy doing?[cite: 1]",
+      hi: "जब आपके पास खाली समय होता है, तो आपको सबसे ज्यादा क्या करना पसंद है?",
+      mr: "जेव्हा तुमच्याकडे मोकळा वेळ असतो, तेव्हा तुम्हाला काय करायला सर्वात जास्त आवडते?"
+    },
+    options: [
+      { labels: { en: "Building or fixing things with your hands[cite: 1]", hi: "अपने हाथों से चीजों का निर्माण या मरम्मत करना", mr: "आपल्या हातांनी वस्तू बनवणे किंवा दुरुस्त करणे" }, vals: { R: 3 } },
+      { labels: { en: "Reading, researching, or solving puzzles[cite: 1]", hi: "पढ़ना, शोध करना, या पहेलियाँ सुलषाना", mr: "वाचन, संशोधन किंवा कोडी सोडवणे" }, vals: { I: 3 } },
+      { labels: { en: "Drawing, writing, making music, or creating[cite: 1]", hi: "चित्रकारी, लेखन, संगीत बनाना, या रचना करना", mr: "चित्र काढणे, लिहिणे, संगीत तयार करणे किंवा निर्मिती" }, vals: { A: 3 } },
+      { labels: { en: "Talking to people or helping someone out[cite: 1]", hi: "लोगों से बात करना या किसी की मदद करना", mr: "लोकांशी बोलणे किंवा कोणालातरी मदत करणे" }, vals: { S: 3 } },
+      { labels: { en: "Organising events or leading a group activity[cite: 1]", hi: "कार्यक्रम आयोजित करना या किसी समूह गतिविधि का नेतृत्व करना", mr: "कार्यक्रम आयोजित करणे किंवा गट क्रियाकलापांचे नेतृत्व करणे" }, vals: { E: 3 } },
+      { labels: { en: "Keeping things orderly and tracking details[cite: 1]", hi: "चीजों को व्यवस्थित रखना और विवरणों को ट्रैक करना", mr: "गोष्टी व्यवस्थित ठेवणे आणि तपशीलांचा मागोवा घेणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which school subject do you genuinely enjoy the most?[cite: 1]",
+      hi: "आप वास्तव में किस स्कूल विषय का सबसे अधिक आनंद लेते हैं?",
+      mr: "तुम्ही शाळेतील कोणत्या विषयाचा प्रामाणिकपणे आनंद घेता?"
+    },
+    options: [
+      { labels: { en: "Physics, chemistry, or maths[cite: 1]", hi: "भौतिक विज्ञान, रसायन विज्ञान, या गणित", mr: "भौतिकशास्त्र, रसायनशास्त्र किंवा गणित" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "Biology or environmental science[cite: 1]", hi: "जीव विज्ञान या पर्यावरण विज्ञान", mr: "जीवशास्त्र किंवा पर्यावरण विज्ञान" }, vals: { I: 2, S: 1 } },
+      { labels: { en: "Arts, literature, or languages[cite: 1]", hi: "कला, साहित्य, या भाषा", mr: "कला, साहित्य किंवा भाषा" }, vals: { A: 3 } },
+      { labels: { en: "Psychology, sociology, or history[cite: 1]", hi: "मनोविज्ञान, समाजशास्त्र, या इतिहास", mr: "मानसशास्त्र, समाजशास्त्र किंवा इतिहास" }, vals: { S: 2, I: 1 } },
+      { labels: { en: "Business studies or economics[cite: 1]", hi: "बिजनेस स्टडीज या अर्थशास्त्र", mr: "व्यवसाय अभ्यास किंवा अर्थशास्त्र" }, vals: { E: 3 } },
+      { labels: { en: "Accounts or computer applications[cite: 1]", hi: "अकाउंट्स या कंप्यूटर एप्लीकेशन", mr: "अकाउंट्स किंवा कॉम्प्युटर ॲप्लिकेशन्स" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "If you had to pick a weekend project, which would you choose?[cite: 1]",
+      hi: "यदि आपको सप्ताहांत की कोई परियोजना चुननी हो, तो आप किसे चुनेंगे?",
+      mr: "जर तुम्हाला वीकेंड प्रोजेक्ट निवडायचा असेल तर तुम्ही कोणता निवडाल?"
+    },
+    options: [
+      { labels: { en: "Build a working model or repair something[cite: 1]", hi: "एक वर्किंग मॉडल बनाना या किसी चीज़ की मरम्मत करना", mr: "वर्किंग मॉडेल तयार करणे किंवा कशाची तरी दुरुस्ती करणे" }, vals: { R: 3 } },
+      { labels: { en: "Conduct a science experiment or research a topic[cite: 1]", hi: "विज्ञान प्रयोग करना या किसी विषय पर शोध करना", mr: "विज्ञान प्रयोग करणे किंवा एखाद्या विषयावर संशोधन करणे" }, vals: { I: 3 } },
+      { labels: { en: "Design a poster, write a story, or compose music[cite: 1]", hi: "एक पोस्टर डिज़ाइन करना, कहानी लिखना, या संगीत तैयार करना", mr: "पोस्टर डिझाइन करणे, गोष्ट लिहिणे किंवा संगीत तयार करणे" }, vals: { A: 3 } },
+      { labels: { en: "Volunteer at a local NGO or help a friend[cite: 1]", hi: "स्थानीय एनजीओ में स्वयंसेवा करना या किसी मित्र की मदद करना", mr: "स्थानिक स्वयंसेवी संस्थेत स्वयंसेवा करणे किंवा मित्राला मदत करणे" }, vals: { S: 3 } },
+      { labels: { en: "Start a small business or organise a fundraiser[cite: 1]", hi: "एक छोटा व्यवसाय शुरू करना या धन जुटाने का आयोजन करना", mr: "छोटा व्यवसाय सुरू करणे किंवा निधी उभारणीचे आयोजन करणे" }, vals: { E: 3 } },
+      { labels: { en: "Maintain a budget planner or organise files[cite: 1]", hi: "बजट प्लानर बनाए रखना या फाइलों को व्यवस्थित करना", mr: "बजेट प्लॅनर राखणे किंवा फाइल्स व्यवस्थित करणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "In a group project, what role do you naturally take?[cite: 1]",
+      hi: "एक समूह परियोजना में, आप स्वाभाविक रूप से क्या भूमिका निभाते हैं?",
+      mr: "ग्रुप प्रोजेक्टमध्ये, तुम्ही नैसर्गिकरित्या कोणती भूमिका घेता?"
+    },
+    options: [
+      { labels: { en: "The one who builds or makes the actual thing[cite: 1]", hi: "वह जो वास्तविक चीज़ का निर्माण करता है या बनाता है", mr: "प्रत्यक्ष वस्तू बनवणारी किंवा तयार करणारी व्यक्ती" }, vals: { R: 2, C: 1 } },
+      { labels: { en: "The one who researches and analyses the problem[cite: 1]", hi: "वह जो समस्या का शोध और विश्लेषण करता है", mr: "समस्येचे संशोधन आणि विश्लेषण करणारी व्यक्ती" }, vals: { I: 3 } },
+      { labels: { en: "The one who comes up with creative ideas[cite: 1]", hi: "वह जो रचनात्मक विचारों के साथ आता है", mr: "सर्जनशील कल्पना घेऊन येणारी व्यक्ती" }, vals: { A: 3 } },
+      { labels: { en: "The one who keeps the team together and motivated[cite: 1]", hi: "वह जो टीम को एकजुट और प्रेरित रखता है", mr: "संघाला एकत्र ठेवणारी आणि प्रेरित करणारी व्यक्ती" }, vals: { S: 3 } },
+      { labels: { en: "The leader who delegates and drives results[cite: 1]", hi: "वह नेता जो काम सौंपता है और परिणाम देता है", mr: "जबाबदारी सोपवणारा आणि परिणाम साधणारा नेता" }, vals: { E: 3 } },
+      { labels: { en: "The one who plans the schedule and checks accuracy[cite: 1]", hi: "वह जो समय सारिणी की योजना बनाता है और सटीकता की जांच करता है", mr: "वेळापत्रकाचे नियोजन करणारी आणि अचूकता तपासणारी व्यक्ती" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "How do you prefer to work?[cite: 1]",
+      hi: "आप कैसे काम करना पसंद करते हैं?",
+      mr: "तुम्हाला कसे काम करायला आवडते?"
+    },
+    options: [
+      { labels: { en: "Alone, with clear tasks and minimal meetings[cite: 1]", hi: "अकेले, स्पष्ट कार्यों और न्यूनतम बैठकों के साथ", mr: "एकटे, स्पष्ट कामे आणि कमीत कमी बैठकांसह" }, vals: { R: 2, C: 1 } },
+      { labels: { en: "Independently, deep in research or analysis[cite: 1]", hi: "स्वतंत्र रूप से, शोध या विश्लेषण में गहराई से", mr: "स्वतंत्रपणे, संशोधन किंवा विश्लेषणामध्ये मग्न" }, vals: { I: 3 } },
+      { labels: { en: "Freely, with space to experiment and create[cite: 1]", hi: "स्वतंत्र रूप से, प्रयोग करने और निर्माण करने के स्थान के साथ", mr: "मुक्तपणे, प्रयोग आणि निर्मितीसाठी स्पेससह" }, vals: { A: 3 } },
+      { labels: { en: "With people — the more interaction the better[cite: 1]", hi: "लोगों के साथ — जितना अधिक संवाद उतना बेहतर", mr: "लोकांसोबत — जितका जास्त संवाद तितके चांगले" }, vals: { S: 3 } },
+      { labels: { en: "Leading a team toward a visible goal[cite: 1]", hi: "एक स्पष्ट लक्ष्य की ओर एक टीम का नेतृत्व करना", mr: "एका दृश्य ध्येयाकडे संघाचे नेतृत्व करणे" }, vals: { E: 3 } },
+      { labels: { en: "In a structured environment with clear processes[cite: 1]", hi: "स्पष्ट प्रक्रियाओं के साथ एक संरचित वातावरण में", mr: "स्पष्ट प्रक्रियांसह एका संरचित वातावरणात" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "What kind of problems excite you most?[cite: 1]",
+      hi: "किस तरह की समस्याएं आपको सबसे ज्यादा उत्साहित करती हैं?",
+      mr: "कोणत्या प्रकारच्या समस्या तुम्हाला सर्वात जास्त आकर्षित करतात?"
+    },
+    options: [
+      { labels: { en: "Technical or mechanical challenges[cite: 1]", hi: "तकनीकी या यांत्रिक चुनौतियाँ", mr: "तांत्रिक किंवा मेकॅनिकल आव्हाने" }, vals: { R: 3 } },
+      { labels: { en: "Complex puzzles or unanswered scientific questions[cite: 1]", hi: "जटिल पहेलियाँ या अनुत्तरित वैज्ञानिक प्रश्न", mr: "गुंतागुंतीची कोडी किंवा अनुत्तरीत वैज्ञानिक प्रश्न" }, vals: { I: 3 } },
+      { labels: { en: "Challenges where creativity is the solution[cite: 1]", hi: "चुनौतियाँ जहाँ रचनात्मकता ही समाधान है", mr: "अशी आव्हाने जिथे सर्जनशीलता हेच उत्तर आहे" }, vals: { A: 3 } },
+      { labels: { en: "Human problems — relationships, mental health, community[cite: 1]", hi: "मानवीय समस्याएं — रिश्ते, मानसिक स्वास्थ्य, समुदाय", mr: "मानवी समस्या — नातेसंबंध, मानसिक आरोग्य, समुदाय" }, vals: { S: 3 } },
+      { labels: { en: "Business or market challenges[cite: 1]", hi: "व्यवसाय या बाजार की चुनौतियाँ", mr: "व्यवसाय किंवा बाजारपेठेतील आव्हाने" }, vals: { E: 3 } },
+      { labels: { en: "Process and efficiency problems[cite: 1]", hi: "प्रक्रिया और दक्षता की समस्याएं", mr: "प्रक्रिया आणि कार्यक्षमता समस्या" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which of these environments would make you happiest at work?[cite: 1]",
+      hi: "इनमें से कौन सा वातावरण आपको काम पर सबसे ज्यादा खुश रखेगा?",
+      mr: "यापैकी कोणते वातावरण तुम्हाला कामावर सर्वात जास्त आनंदी ठेवेल?"
+    },
+    options: [
+      { labels: { en: "Outdoors, labs, or on-site locations[cite: 1]", hi: "आउटडोर, लैब, या ऑन-साइट स्थान", mr: "आऊटडोअर, लॅब किंवा ऑन-साइट लोकेशन्स" }, vals: { R: 3 } },
+      { labels: { en: "A quiet research lab or library[cite: 1]", hi: "एक शांत अनुसंधान प्रयोगशाला या पुस्तकालय", mr: "शांत संशोधन प्रयोगशाळा किंवा ग्रंथालय" }, vals: { I: 3 } },
+      { labels: { en: "A creative studio or open workspace[cite: 1]", hi: "एक रचनात्मक स्टूडियो या खुला कार्यक्षेत्र", mr: "एक सर्जनशील स्टुडिओ किंवा ओपन वर्कस्पेस" }, vals: { A: 3 } },
+      { labels: { en: "A hospital, school, or community centre[cite: 1]", hi: "एक अस्पताल, स्कूल, या सामुदायिक केंद्र", mr: "रुग्णालय, शाळा किंवा समुदाय केंद्र" }, vals: { S: 3 } },
+      { labels: { en: "A fast-paced office or startup[cite: 1]", hi: "एक तेज़ गति वाला कार्यालय या स्टार्टअप", mr: "वेगवान ऑफिस किंवा स्टार्टअप" }, vals: { E: 3 } },
+      { labels: { en: "A corporate office with clear hierarchy[cite: 1]", hi: "स्पष्ट पदानुक्रम वाला एक कॉर्पोरेट कार्यालय", mr: "स्पष्ट पदानुक्रम असलेले कॉर्पोरेट ऑफिस" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "How do you handle uncertainty?[cite: 1]",
+      hi: "आप अनिश्चितता को कैसे संभालते हैं?",
+      mr: "तुम्ही अनिश्चितता कशी हाताळता?"
+    },
+    options: [
+      { labels: { en: "I prefer clear, practical solutions — less guessing[cite: 1]", hi: "मैं स्पष्ट, व्यावहारिक समाधान पसंद करता हूं — कम अनुमान लगाना", mr: "मी स्पष्ट, व्यावहारिक समाधानांना प्राधान्य देतो — कमी अंदाज" }, vals: { R: 2, C: 1 } },
+      { labels: { en: "I analyse until I find the most logical answer[cite: 1]", hi: "मैं तब तक विश्लेषण करता हूं जब तक मुझे सबसे तार्किक उत्तर नहीं मिल जाता", mr: "जोपर्यंत मला सर्वात तार्किक उत्तर मिळत नाही तोपर्यंत मी विश्लेषण करतो" }, vals: { I: 3 } },
+      { labels: { en: "I embrace it — uncertainty sparks creativity[cite: 1]", hi: "मैं इसे स्वीकार करता हूं — अनिश्चितता रचनात्मकता को बढ़ावा देती है", mr: "मी त्याचा स्वीकार करतो — अनिश्चिततेमुळे सर्जनशीलता वाढते" }, vals: { A: 3 } },
+      { labels: { en: "I talk to others to find a way through[cite: 1]", hi: "मैं रास्ता खोजने के लिए दूसरों से बात करता हूं", mr: "मार्ग काढण्यासाठी मी इतरांशी बोलतो" }, vals: { S: 2, E: 1 } },
+      { labels: { en: "I take charge and make a decision[cite: 1]", hi: "मैं जिम्मेदारी लेता हूं और निर्णय लेता हूं", mr: "मी जबाबदारी घेतो आणि निर्णय घेतो" }, vals: { E: 3 } },
+      { labels: { en: "I make a plan and follow it step by step[cite: 1]", hi: "मैं एक योजना बनाता हूं और कदम दर कदम उसका पालन करता हूं", mr: "मी एक योजना बनवतो आणि त्याचे स्टेप बाय स्टेप पालन करतो" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which of these activities sounds most satisfying?[cite: 1]",
+      hi: "इनमें से कौन सी गतिविधि सबसे संतोषजनक लगती है?",
+      mr: "यापैकी कोणती कृती सर्वात समाधानकारक वाटते?"
+    },
+    options: [
+      { labels: { en: "Designing and building a machine or app[cite: 1]", hi: "मशीन या ऐप को डिजाइन करना और बनाना", mr: "मशीन किंवा ॲप डिझाइन करणे आणि तयार करणे" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "Publishing a research paper or discovery[cite: 1]", hi: "एक शोध पत्र या खोज प्रकाशित करना", mr: "शोधनिबंध किंवा शोध प्रकाशित करणे" }, vals: { I: 3 } },
+      { labels: { en: "Exhibiting your artwork or performing on stage[cite: 1]", hi: "अपनी कलाकृति की प्रदर्शनी लगाना या मंच पर प्रदर्शन करना", mr: "आपल्या कलाकृतीचे प्रदर्शन करणे किंवा स्टेजवर सादरीकरण करणे" }, vals: { A: 3 } },
+      { labels: { en: "Counselling someone through a difficult time[cite: 1]", hi: "कठिन समय में किसी की काउंसलिंग करना", mr: "कठीण काळात कोणाचे समुपदेशन करणे" }, vals: { S: 3 } },
+      { labels: { en: "Launching a product and watching it grow[cite: 1]", hi: "एक उत्पाद लॉन्च करना और उसे बढ़ते हुए देखना", mr: "उत्पादन लाँच करणे आणि्याची वाढ पाहणे" }, vals: { E: 3 } },
+      { labels: { en: "Completing a perfect financial audit[cite: 1]", hi: "एक आदर्श वित्तीय ऑडिट पूरा करना", mr: "परिपूर्ण आर्थिक ऑडिट पूर्ण करणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "What do friends or family say about you most often?[cite: 1]",
+      hi: "दोस्त या परिवार आपके बारे में अक्सर क्या कहते हैं?",
+      mr: "मित्र किंवा कुटुंब तुमच्याबद्दल वारंवार काय म्हणतात?"
+    },
+    options: [
+      { labels: { en: "That you are practical and good with your hands[cite: 1]", hi: "कि आप व्यावहारिक हैं और हाथों के काम में अच्छे हैं", mr: "की तुम्ही व्यावहारिक आहात आणि हाताच्या कामात कुशल आहात" }, vals: { R: 2 } },
+      { labels: { en: "That you are curious and always asking questions[cite: 1]", hi: "कि आप जिज्ञासु हैं और हमेशा सवाल पूछते रहते हैं", mr: "की तुम्ही जिज्ञासू आहात आणि नेहमी प्रश्न विचारता" }, vals: { I: 3 } },
+      { labels: { en: "That you are imaginative and original[cite: 1]", hi: "कि आप कल्पनाशील और मौलिक हैं", mr: "की तुम्ही कल्पक आणि ओरिजिनल आहात" }, vals: { A: 3 } },
+      { labels: { en: "That you are kind and a good listener[cite: 1]", hi: "कि आप दयालु हैं और एक अच्छे श्रोता हैं", mr: "की तुम्ही दयाळू आणि चांगले श्रोते आहात" }, vals: { S: 3 } },
+      { labels: { en: "That you are confident and persuasive[cite: 1]", hi: "कि आप आत्मविश्वासी और प्रभावशाली हैं", mr: "की तुम्ही आत्मविश्वासी आणि प्रभावी आहात" }, vals: { E: 3 } },
+      { labels: { en: "That you are organised and reliable[cite: 1]", hi: "कि आप व्यवस्थित और भरोसेमंद हैं", mr: "की तुम्ही संघटित आणि विश्वसनीय आहात" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "What kind of impact do you want your career to have?[cite: 1]",
+      hi: "आप अपने करियर का कैसा प्रभाव चाहते हैं?",
+      mr: "तुमच्या करिअरचा कसा प्रभाव पडावा असे तुम्हाला वाटते?"
+    },
+    options: [
+      { labels: { en: "Build things that improve everyday life[cite: 1]", hi: "ऐसी चीजें बनाना जो रोजमर्रा की जिंदगी को बेहतर बनाएं", mr: "रोजचे जीवन सुधारेल अशा वस्तू बनवणे" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "Advance human knowledge and science[cite: 1]", hi: "मानव ज्ञान और विज्ञान को आगे बढ़ाना", mr: "मानवी ज्ञान आणि विज्ञानाचा विकास करणे" }, vals: { I: 3 } },
+      { labels: { en: "Inspire people through art or storytelling[cite: 1]", hi: "कला या कहानी कहने के माध्यम से लोगों को प्रेरित करना", mr: "कला किंवा कथाकथनातून लोकांना प्रेरित करणे" }, vals: { A: 3 } },
+      { labels: { en: "Directly help individuals or communities[cite: 1]", hi: "सीधे व्यक्तियों या समुदायों की मदद करना", mr: "व्यक्तींना किंवा समुदायांना थेट मदत करणे" }, vals: { S: 3 } },
+      { labels: { en: "Create jobs or drive economic growth[cite: 1]", hi: "रोजगार पैदा करना या आर्थिक विकास को गति देना", mr: "रोजगार निर्मिती या आर्थिक विकासाला गती देणे" }, vals: { E: 3 } },
+      { labels: { en: "Ensure systems run accurately and efficiently[cite: 1]", hi: "यह सुनिश्चित करना कि प्रणालियाँ सटीक और कुशलता से चलें", mr: "प्रणाली अचूक आणि कार्यक्षमतेने चालेल याची खात्री करणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "How do you feel about public speaking?[cite: 1]",
+      hi: "सार्वजनिक रूप से बोलने के बारे में आप कैसा महसूस करते हैं?",
+      mr: "सार्वजनिक भाषणाबद्दल तुम्हाला काय वाटते?"
+    },
+    options: [
+      { labels: { en: "I avoid it — I prefer hands-on or quiet work[cite: 1]", hi: "मैं इससे बचता हूं — मैं व्यावहारिक या शांत काम पसंद करता हूं", mr: "मी ते टाळतो — मी प्रत्यक्ष किंवा शांत कामाला प्राधान्य देतो" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "I can do it but prefer written communication[cite: 1]", hi: "मैं यह कर सकता हूँ लेकिन लिखित संचार पसंद करता हूँ", mr: "मी करू शकतो पण लेखी संवादाला प्राधान्य देतो" }, vals: { I: 2, C: 1 } },
+      { labels: { en: "I enjoy it when I am sharing something I have created[cite: 1]", hi: "जब मैं अपनी बनाई हुई किसी चीज़ को साझा कर रहा होता हूँ तो मुझे आनंद आता है", mr: "मी स्वतः तयार केलेले काहीतरी शेअर करताना मला आनंद होतो" }, vals: { A: 2 } },
+      { labels: { en: "I love it — connecting with people energises me[cite: 1]", hi: "मुझे यह पसंद है — लोगों से जुड़ना मुझे ऊर्जा देता है", mr: "मला आवडते — लोकांशी जोडल्याने मला ऊर्जा मिळते" }, vals: { S: 2, E: 1 } },
+      { labels: { en: "I thrive on it — persuading people is natural to me[cite: 1]", hi: "मैं इस पर फलता-फूलता हूं — लोगों को मनाना मेरे लिए स्वाभाविक है", mr: "मला ते खूप आवडते — लोकांना पटवून देणे माझ्यासाठी नैसर्गिक आहे" }, vals: { E: 3 } },
+      { labels: { en: "I am comfortable when it is structured and prepared[cite: 1]", hi: "जब यह संरचित और तैयार होता है तो मैं सहज महसूस करता हूँ", mr: "जेव्हा ते संरचित आणि पूर्वतयारीसह असते तेव्हा मी कम्फर्टेबल असतो" }, vals: { C: 2 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which of these careers sounds most interesting to you right now?[cite: 1]",
+      hi: "इनमें से कौन सा करियर अभी आपको सबसे दिलचस्प लगता है?",
+      mr: "यापैकी कोणते करिअर तुम्हाला सध्या सर्वात मनोरंजक वाटते?"
+    },
+    options: [
+      { labels: { en: "Civil engineer or architect[cite: 1]", hi: "सिविल इंजीनियर या आर्किटेक्ट", mr: "सिव्हिल इंजिनिअर किंवा आर्किटेक्ट" }, vals: { R: 3 } },
+      { labels: { en: "Data scientist or doctor[cite: 1]", hi: "डेटा साइंटिस्ट या डॉक्टर", mr: "डेटा सायंटिस्ट किंवा डॉक्टर" }, vals: { I: 3 } },
+      { labels: { en: "Filmmaker, designer, or author[cite: 1]", hi: "फिल्ममेकर, डिजाइनर, या लेखक", mr: "चित्रपट निर्माता, डिझायनर किंवा लेखक" }, vals: { A: 3 } },
+      { labels: { en: "Teacher, psychologist, or social worker[cite: 1]", hi: "शिक्षक, मनोवैज्ञानिक, या सामाजिक कार्यकर्ता", mr: "शिक्षक, मानसशास्त्रज्ञ किंवा सामाजिक कार्यकर्ते" }, vals: { S: 3 } },
+      { labels: { en: "Entrepreneur or marketing manager[cite: 1]", hi: "उद्यमी या विपणन प्रबंधक", mr: "उद्योजक किंवा विपणन व्यवस्थापक" }, vals: { E: 3 } },
+      { labels: { en: "Chartered accountant or financial analyst[cite: 1]", hi: "चार्टर्ड अकाउंटेंट या वित्तीय विश्लेषक", mr: "चार्टर्ड अकाउंटंट किंवा आर्थिक विश्लेषक" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "When learning something new, you prefer to:[cite: 1]",
+      hi: "कुछ नया सीखते समय, आप पसंद करते हैं:",
+      mr: "काहीतरी नवीन शिकताना, तुम्ही याला प्राधान्य देता:"
+    },
+    options: [
+      { labels: { en: "Try it out physically — learn by doing[cite: 1]", hi: "इसे व्यावहारिक रूप से आजमाएं — करके सीखें", mr: "प्रत्यक्ष करून पाहणे — कृतीतून शिकणे" }, vals: { R: 3 } },
+      { labels: { en: "Read deeply and understand the theory first[cite: 1]", hi: "गहराई से पढ़ें और पहले सिद्धांत को समझें", mr: "सखोल वाचन आणि आधी सिद्धांत समजून घेणे" }, vals: { I: 3 } },
+      { labels: { en: "Experiment and find your own creative approach[cite: 1]", hi: "प्रयोग करें और अपना खुद का रचनात्मक दृष्टिकोण खोजें", mr: "प्रयोग करणे आणि स्वतःचा सर्जनशील दृष्टिकोन शोधणे" }, vals: { A: 3 } },
+      { labels: { en: "Learn from someone you trust or in a group[cite: 1]", hi: "किसी ऐसे व्यक्ति से सीखें जिस पर आप भरोसा करते हैं या किसी समूह में", mr: "तुम्ही विश्वास ठेवता अशा व्यक्तीकडून किंवा गटातून शिकणे" }, vals: { S: 2 } },
+      { labels: { en: "Learn quickly and apply it to a goal[cite: 1]", hi: "जल्दी सीखें और इसे किसी लक्ष्य पर लागू करें", mr: "त्वरीत शिकणे आणि ध्येयासाठी लागू करणे" }, vals: { E: 2 } },
+      { labels: { en: "Follow a structured course or guide step by step[cite: 1]", hi: "एक संरचित पाठ्यक्रम या गाइड का कदम दर कदम पालन करें", mr: "संरचित कोर्स किंवा मार्गदर्शकाचे स्टेप बाय स्टेप पालन करणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "How important is job security to you?[cite: 1]",
+      hi: "आपके लिए नौकरी की सुरक्षा कितनी महत्वपूर्ण है?",
+      mr: "तुमच्यासाठी नोकरीची सुरक्षा किती महत्त्वाची आहे?"
+    },
+    options: [
+      { labels: { en: "Very important — I want a stable, predictable career[cite: 1]", hi: "बहुत महत्वपूर्ण — मैं एक स्थिर, पूर्वानुमान योग्य करियर चाहता हूं", mr: "खूप महत्त्वाचे — मला एक स्थिर, अंदाज लावता येणारा करिअर हवा आहे" }, vals: { C: 2, R: 1 } },
+      { labels: { en: "Important, but I also want intellectual challenge[cite: 1]", hi: "महत्वपूर्ण, लेकिन मैं बौद्धिक चुनौती भी चाहता हूं", mr: "महत्त्वाचे, पण मला बौद्धिक आव्हानही हवे आहे" }, vals: { I: 2 } },
+      { labels: { en: "Less important — I want creative freedom over safety[cite: 1]", hi: "कम महत्वपूर्ण — मैं सुरक्षा से अधिक रचनात्मक स्वतंत्रता चाहता हूं", mr: "कमी महत्त्वाचे — मला सुरक्षेपेक्षा सर्जनशील स्वातंत्र्य हवे आहे" }, vals: { A: 3 } },
+      { labels: { en: "Moderate — I want meaning more than security[cite: 1]", hi: "मध्यम — मैं सुरक्षा से अधिक काम का अर्थ चाहता हूं", mr: "मध्यम — मला सुरक्षेपेक्षा कामाचा अर्थ जास्त हवा आहे" }, vals: { S: 2 } },
+      { labels: { en: "I will create my own security by building something[cite: 1]", hi: "मैं कुछ बनाकर अपनी सुरक्षा खुद बनाऊंगा", mr: "मी स्वतः काहीतरी निर्माण करून माझी सुरक्षा स्वतः तयार करेन" }, vals: { E: 3 } },
+      { labels: { en: "Security matters but so does doing the right work[cite: 1]", hi: "सुरक्षा मायने रखती है लेकिन सही काम करना भी मायने रखता है", mr: "सुरक्षा महत्त्वाची आहे पण योग्य काम करणे देखील महत्त्वाचे आहे" }, vals: { C: 1, S: 1 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which of these describes your ideal day at work?[cite: 1]",
+      hi: "इनमें से कौन आपके काम के एक आदर्श दिन का वर्णन करता है?",
+      mr: "यापैकी कोणते तुमच्या कामाच्या आदर्श दिवसाचे वर्णन करते?"
+    },
+    options: [
+      { labels: { en: "Working with equipment, machines, or physical tasks[cite: 1]", hi: "उपकरणों, मशीनों या व्यावहारिक कार्यों के साथ काम करना", mr: "उपकरणे, मशिन्स किंवा प्रत्यक्ष कामांसह काम करणे" }, vals: { R: 3 } },
+      { labels: { en: "Solving a complex problem at my desk independently[cite: 1]", hi: "स्वतंत्र रूप से अपने डेस्क पर एक जटिल समस्या का समाधान करना", mr: "माझ्या डेस्कवर स्वतंत्रपणे एका गुंतागुंतीच्या समस्येचे निवारण करणे" }, vals: { I: 3 } },
+      { labels: { en: "A day full of creative freedom and experimentation[cite: 1]", hi: "रचनात्मक स्वतंत्रता और प्रयोगों से भरा दिन", mr: "सर्जनशील स्वातंत्र्य आणि प्रयोगांनी भरलेला दिवस" }, vals: { A: 3 } },
+      { labels: { en: "Meaningful conversations and helping others[cite: 1]", hi: "सार्थक बातचीत और दूसरों की मदद करना", mr: "अर्थपूर्ण संभाषण आणि इतरांना मदत करणे" }, vals: { S: 3 } },
+      { labels: { en: "Back-to-back meetings, pitching, and decisions[cite: 1]", hi: "लगातार बैठकें, पिचिंग और निर्णय", mr: "पाठोपाठ बैठका, पिचिंग आणि निर्णय" }, vals: { E: 3 } },
+      { labels: { en: "Processing data, reports, and ensuring accuracy[cite: 1]", hi: "डेटा, रिपोर्ट को प्रोसेस करना और सटीकता सुनिश्चित करना", mr: "डेटा, रिपोर्ट्स प्रोसेस करणे आणि अचूकता सुनिश्चित करणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which skill would you most like to master?[cite: 1]",
+      hi: "आप किस कौशल में सबसे अधिक महारत हासिल करना चाहेंगे?",
+      mr: "तुम्हाला कोणत्या कौशल्यात सर्वात जास्त प्राविण्य मिळवायला आवडेल?"
+    },
+    options: [
+      { labels: { en: "Engineering or coding[cite: 1]", hi: "इंजीनियरिंग या कोडिंग", mr: "इंजिनिअरिंग किंवा कोडिंग" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "Research and critical thinking[cite: 1]", hi: "शोध और महत्वपूर्ण सोच", mr: "संशोधन आणि गंभीर विचार" }, vals: { I: 3 } },
+      { labels: { en: "Storytelling or visual design[cite: 1]", hi: "कहानी सुनाना या विजुअल डिज़ाइन", mr: "कथाकथन किंवा व्हिज्युअल डिझाइन" }, vals: { A: 3 } },
+      { labels: { en: "Empathy and communication[cite: 1]", hi: "सहानुभूति और संचार", mr: "सहानुभूती आणि संवाद" }, vals: { S: 3 } },
+      { labels: { en: "Leadership and negotiation[cite: 1]", hi: "नेतृत्व और बातचीत", mr: "नेतृत्व आणि वाटाघाटी" }, vals: { E: 3 } },
+      { labels: { en: "Financial analysis or data management[cite: 1]", hi: "वित्तीय विश्लेषण या डेटा प्रबंधन", mr: "आर्थिक विश्लेषण किंवा डेटा व्यवस्थापन" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "How do you feel about taking risks?[cite: 1]",
+      hi: "आप जोखिम लेने के बारे में कैसा महसूस करते हैं?",
+      mr: "तुम्हाला जोखीम घेण्याबद्दल काय वाटते?"
+    },
+    options: [
+      { labels: { en: "I prefer calculated, practical decisions[cite: 1]", hi: "मैं गणना किए गए, व्यावहारिक निर्णयों को पसंद करता हूं", mr: "मी मोजक्या, व्यावहारिक निर्णयांना प्राधान्य देतो" }, vals: { R: 2, C: 1 } },
+      { labels: { en: "I take risks only after thorough research[cite: 1]", hi: "मैं गहन शोध के बाद ही जोखिम उठाता हूं", mr: "मी सखोल संशोधनानंतरच जोखीम पत्करतो" }, vals: { I: 3 } },
+      { labels: { en: "Risk excites me — especially creative risks[cite: 1]", hi: "जोखिम मुझे उत्साहित करता है — विशेष रूप से रचनात्मक जोखिम", mr: "जोखीम मला आकर्षित करते — विशेषतः सर्जनशील जोखीम" }, vals: { A: 2, E: 1 } },
+      { labels: { en: "I prefer to consult others before taking risks[cite: 1]", hi: "मैं जोखिम लेने से पहले दूसरों से सलाह लेना पसंद करता हूं", mr: "मी जोखीम घेण्यापूर्वी इतरांशी सल्लामसलत करणे पसंत करतो" }, vals: { S: 2 } },
+      { labels: { en: "I take bold risks — that is how growth happens[cite: 1]", hi: "मैं बड़े जोखिम उठाता हूँ — विकास इसी तरह होता है", mr: "मी धाडसी जोखीम घेतो — यातूनच प्रगती होते" }, vals: { E: 3 } },
+      { labels: { en: "I minimise risk through planning and process[cite: 1]", hi: "मैं योजना और प्रक्रिया के माध्यम से जोखिम को कम करता हूं", mr: "मी नियोजन आणि प्रक्रियेद्वारे जोखीम कमी करतो" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which of these best describes how you see yourself?[cite: 1]",
+      hi: "इनमें से कौन सा आपका सबसे अच्छा वर्णन करता है कि आप खुद को कैसे देखते हैं?",
+      mr: "यापैकी कोणते तुम्ही स्वतःला कसे पाहता याचे सर्वोत्तम वर्णन करते?"
+    },
+    options: [
+      { labels: { en: "Practical and realistic[cite: 1]", hi: "व्यावहारिक और यथार्थवादी", mr: "व्यावहारिक आणि वास्तववादी" }, vals: { R: 3 } },
+      { labels: { en: "Analytical and curious[cite: 1]", hi: "विश्लेषणात्मक और जिज्ञासु", mr: "विश्लेषणात्मक आणि जिज्ञासू" }, vals: { I: 3 } },
+      { labels: { en: "Creative and expressive[cite: 1]", hi: "रचनात्मक और अभिव्यंजक", mr: "सर्जनशील आणि अभिव्यक्त" }, vals: { A: 3 } },
+      { labels: { en: "Warm and empathetic[cite: 1]", hi: "सौम्य और सहानुभूतिपूर्ण", mr: "प्रेमळ आणि सहानुभूतीपूर्ण" }, vals: { S: 3 } },
+      { labels: { en: "Ambitious and persuasive[cite: 1]", hi: "महत्वाकांक्षी और प्रेरक", mr: "महत्त्वाकांक्षी आणि मन वळवणारे" }, vals: { E: 3 } },
+      { labels: { en: "Detail-oriented and precise[cite: 1]", hi: "विवरण-उन्मुख और सटीक", mr: "तपशीलाभिमुख आणि अचूक" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "What motivates you most at work?[cite: 1]",
+      hi: "काम पर आपको सबसे ज्यादा क्या प्रेरित करता है?",
+      mr: "कामावर तुम्हाला सर्वात जास्त कशामुळे प्रेरणा मिळते?"
+    },
+    options: [
+      { labels: { en: "Seeing a physical result of my work[cite: 1]", hi: "अपने काम का एक वास्तविक परिणाम देखना", mr: "माझ्या कामाचा प्रत्यक्ष परिणाम पाहणे" }, vals: { R: 3 } },
+      { labels: { en: "Understanding something deeply[cite: 1]", hi: "किसी चीज़ को गहराई से समझना", mr: "एखादी गोष्ट सखोलपणे समजून घेणे" }, vals: { I: 3 } },
+      { labels: { en: "Expressing myself or producing something original[cite: 1]", hi: "खुद को अभिव्यक्त करना या कुछ मौलिक बनाना", mr: "स्वतःला अभिव्यक्त करणे किंवा काहीतरी मूळ तयार करणे" }, vals: { A: 3 } },
+      { labels: { en: "Knowing I made a positive difference to someone[cite: 1]", hi: "यह जानना कि मैंने किसी के जीवन में सकारात्मक बदलाव लाया है", mr: "मी कोणाच्या तरी आयुष्यात सकारात्मक बदल घडवला हे जाणून घेणे" }, vals: { S: 3 } },
+      { labels: { en: "Achieving targets and being recognised[cite: 1]", hi: "लक्ष्य हासिल करना और पहचान पाना", mr: "लक्ष्य साध्य करणे आणि ओळख मिळवणे" }, vals: { E: 3 } },
+      { labels: { en: "Completing tasks accurately and efficiently[cite: 1]", hi: "कार्यों को सटीक और कुशलता से पूरा करना", mr: "कामे अचूक आणि कार्यक्षमतेने पूर्ण करणे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "How do you handle a task you find boring?[cite: 1]",
+      hi: "आप उस कार्य को कैसे संभालते हैं जो आपको उबाऊ लगता है?",
+      mr: "तुम्हाला कंटाळवाणे वाटणारे काम तुम्ही कसे हाताळता?"
+    },
+    options: [
+      { labels: { en: "I focus on the practical outcome and just do it[cite: 1]", hi: "मैं व्यावहारिक परिणाम पर ध्यान केंद्रित करता हूं और बस इसे करता हूं", mr: "मी व्यावहारिक परिणामावर लक्ष केंद्रित करतो आणि ते फक्त करतो" }, vals: { R: 2 } },
+      { labels: { en: "I find an intellectual angle to make it interesting[cite: 1]", hi: "मैं इसे दिलचस्प बनाने के लिए एक बौद्धिक कोण ढूंढता हूं", mr: "ते मनोरंजक बनवण्यासाठी मला एक बौद्धिक कोन सापडतो" }, vals: { I: 2 } },
+      { labels: { en: "I struggle — I need the work to feel creative[cite: 1]", hi: "मैं संघर्ष करता हूँ — मुझे काम में रचनात्मकता महसूस होनी चाहिए", mr: "मला त्रास होतो — मला कामात सर्जनशीलता जाणवणे आवश्यक आहे" }, vals: { A: 2 } },
+      { labels: { en: "I ask for help or collaborate to make it bearable[cite: 1]", hi: "मैं इसे सहने योग्य बनाने के लिए मदद मांगता हूं या सहयोग करता हूं", mr: "ते सुसह्य करण्यासाठी मी मदत मागतो किंवा सहकार्य करतो" }, vals: { S: 2 } },
+      { labels: { en: "I delegate or find a faster way through it[cite: 1]", hi: "मैं इसे दूसरों को सौंपता हूं या इसके माध्यम से एक तेज़ रास्ता खोजता हूं", mr: "मी ते इतरांवर सोपवतो किंवा त्यातून जलद मार्ग शोधतो" }, vals: { E: 3 } },
+      { labels: { en: "I follow the process — boring tasks still need doing right[cite: 1]", hi: "मैं प्रक्रिया का पालन करता हूं — उबाऊ कार्यों को भी सही ढंग से करने की आवश्यकता होती है", mr: "मी प्रक्रियेचे पालन करतो — कंटाळवाणी कामे देखील योग्य पद्धतीने करणे आवश्यक आहे" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which of these famous people do you find most inspiring?[cite: 1]",
+      hi: "इनमें से कौन सी प्रसिद्ध हस्ती आपको सबसे अधिक प्रेरणादायक लगती है?",
+      mr: "या प्रसिद्ध व्यक्तींपैकी कोण तुम्हाला सर्वात जास्त प्रेरणादायी वाटते?"
+    },
+    options: [
+      { labels: { en: "Elon Musk or Satya Nadella — tech builders[cite: 1]", hi: "एलोन मस्क या सत्या नडेला — टेक बिल्डर्स", mr: "इलॉन मस्क किंवा सत्या नाडेला — टेक बिल्डर्स" }, vals: { R: 2, E: 1 } },
+      { labels: { en: "APJ Abdul Kalam or Marie Curie — scientist thinkers[cite: 1]", hi: "एपीजे अब्दुल कलाम या मैरी क्युरी — वैज्ञानिक विचारक", mr: "एपीजे अब्दुल कलाम किंवा मेरी क्युरी — वैज्ञानिक विचारवंत" }, vals: { I: 3 } },
+      { labels: { en: "AR Rahman or Satyajit Ray — creative visionaries[cite: 1]", hi: "ए आर रहमान या सत्यजीत रे — रचनात्मक दूरदर्शी", mr: "ए आर रहमान किंवा सत्यजित रे — सर्जनशील दूरदर्शी" }, vals: { A: 3 } },
+      { labels: { en: "Mother Teresa or Kailash Satyarthi — humanitarians[cite: 1]", hi: "मदर टेरेसा या कैलाश सत्यार्थी — मानवतावादी", mr: "मदर तेरेसा किंवा कैलास सत्यार्थी — मानवतावादी" }, vals: { S: 3 } },
+      { labels: { en: "Ratan Tata or Narayana Murthy — business leaders[cite: 1]", hi: "रतन टाटा या नारायण मूर्ति — बिजनेस लीडर्स", mr: "रतन टाटा किंवा नारायण मूर्ती — व्यावसायिक नेते" }, vals: { E: 3 } },
+      { labels: { en: "Nirmala Sitharaman or Warren Buffett — finance leaders[cite: 1]", hi: "निर्मला सीतारमण या वॉरेन बफेट — फाइनेंस लीडर्स", mr: "निर्मला सीतारामन किंवा वॉरेन बफे — आर्थिक नेते" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "What matter most to you in a career?[cite: 1]",
+      hi: "करियर में आपके लिए सबसे ज्यादा क्या मायने रखता है?",
+      mr: "करिअरमध्ये तुमच्यासाठी सर्वात महत्त्वाचे काय आहे?"
+    },
+    options: [
+      { labels: { en: "Doing meaningful, hands-on work[cite: 1]", hi: "सार्थक, व्यावहारिक काम करना", mr: "अर्थपूर्ण, प्रत्यक्ष काम करणे" }, vals: { R: 3 } },
+      { labels: { en: "Intellectual stimulation and discovery[cite: 1]", hi: "बौद्धिक उत्तेजना और खोज", mr: "बौद्धिक उत्तेजना आणि शोध" }, vals: { I: 3 } },
+      { labels: { en: "Creative freedom and self-expression[cite: 1]", hi: "रचनात्मक स्वतंत्रता और आत्म-अभिव्यक्ति", mr: "सर्जनशील स्वातंत्र्य आणि आत्म-अभिव्यक्ती" }, vals: { A: 3 } },
+      { labels: { en: "Making a real difference in people's lives[cite: 1]", hi: "लोगों के जीवन में वास्तविक बदलाव लाना", mr: "लोकांच्या जीवनात खरा बदल घडवणे" }, vals: { S: 3 } },
+      { labels: { en: "Growth, status, and financial reward[cite: 1]", hi: "विकास, प्रतिष्ठा और वित्तीय लाभ", mr: "वाढ, प्रतिष्ठा आणि आर्थिक लाभ" }, vals: { E: 3 } },
+      { labels: { en: "Stability, structure, and accuracy[cite: 1]", hi: "स्थिरता, संरचना और सटीकता", mr: "स्थिरता, रचना आणि अचूकता" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Which type of content do you most enjoy?[cite: 1]",
+      hi: "आप किस प्रकार की सामग्री का सबसे अधिक आनंद लेते हैं?",
+      mr: "तुम्ही कोणत्या प्रकारच्या कंटेंटचा सर्वात जास्त आनंद घेता?"
+    },
+    options: [
+      { labels: { en: "How-to guides, engineering, or technology[cite: 1]", hi: "हाउ-टू गाइड, इंजीनियरिंग, या तकनीक", mr: "मार्गदर्शक पुस्तके, इंजिनिअरिंग किंवा तंत्रज्ञान" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "Science, philosophy, or investigative journalism[cite: 1]", hi: "विज्ञान, दर्शन, या खोजी पत्रकारिता", mr: "विज्ञान, तत्त्वज्ञान किंवा शोधपत्रकारिता" }, vals: { I: 3 } },
+      { labels: { en: "Fiction, art, poetry, or film[cite: 1]", hi: "काल्पनिक कथा, कला, कविता, या फिल्म", mr: "कादंबरी, कला, कविता किंवा चित्रपट" }, vals: { A: 3 } },
+      { labels: { en: "Self-help, psychology, or biographies[cite: 1]", hi: "आत्म-सहायता, मनोविज्ञान, या जीवनी", mr: "आत्म-मदत, मानसशास्त्र किंवा चरित्रे" }, vals: { S: 3 } },
+      { labels: { en: "Business, entrepreneurship, or leadership[cite: 1]", hi: "बिजनेस, उद्यमिता, या नेतृत्व", mr: "व्यवसाय, उद्योजकता किंवा नेतृत्व" }, vals: { E: 3 } },
+      { labels: { en: "Finance, strategy, or productivity[cite: 1]", hi: "फाइनेंस, रणनीति, या उत्पादकता", mr: "आर्थिक, धोरण किंवा उत्पादकता" }, vals: { C: 3 } }
+    ]
+  },
+  {
+    text: {
+      en: "Imagine your career 10 years from now — which future excites you most?[cite: 1]",
+      hi: "अब से 10 साल बाद अपने करियर की कल्पना करें — कौन सा भविष्य आपको सबसे ज्यादा उत्साहित करता है?",
+      mr: "आतापासून १० वर्षांनंतरच्या तुमच्या करिअरची कल्पना करा — कोणते भविष्य तुम्हाला सर्वात जास्त उत्साहित करते?"
+    },
+    options: [
+      { labels: { en: "Leading a technical team or running a lab[cite: 1]", hi: "एक तकनीकी टीम का नेतृत्व करना या लैब चलाना", mr: "तांत्रिक संघाचे नेतृत्व करणे किंवा लॅब चालवणे" }, vals: { R: 2, I: 1 } },
+      { labels: { en: "Publishing research or being a subject expert[cite: 1]", hi: "शोध प्रकाशित करना या विषय विशेषज्ञ बनना", mr: "संशोधन प्रकाशित करणे किंवा विषय तज्ज्ञ होणे" }, vals: { I: 3 } },
+      { labels: { en: "Running a creative studio or winning awards[cite: 1]", hi: "एक रचनात्मक स्टूडियो चलाना या पुरस्कार जीतना", mr: "सर्जनशील स्टुडिओ चालवणे किंवा पुरस्कार जिंकणे" }, vals: { A: 3 } },
+      { labels: { en: "Leading a nonprofit or impacting thousands of lives[cite: 1]", hi: "एक गैर-लाभकारी संस्था का नेतृत्व करना या हजारों जीवन को प्रभावित करना", mr: "स्वयंसेवी संस्थेचे नेतृत्व करणे किंवा हजारो जीवनांवर प्रभाव पाडणे" }, vals: { S: 3 } },
+      { labels: { en: "Running your own company or a senior leadership role[cite: 1]", hi: "अपनी खुद की कंपनी चलाना या एक वरिष्ठ नेतृत्व भूमिका निभाना", mr: "स्वतःची कंपनी चालवणे किंवा वरिष्ठ नेतृत्व भूमिका बजावणे" }, vals: { E: 3 } },
+      { labels: { en: "Being a trusted financial or compliance expert[cite: 1]", hi: "एक विश्वसनीय वित्तीय या अनुपालन विशेषज्ञ बनना", mr: "एक विश्वसनीय आर्थिक किंवा अनुपालन तज्ज्ञ होणे" }, vals: { C: 3 } }
+    ]
+  }
+];
+
+const profiles = {
+  R: { name: "Engineering, Infrastructure & Robotics (The Builder)[cite: 1]", careers: ["Civil Engineering", "Mechanical Engineering", "Architecture", "Product Design", "Robotics & Automation", "Aviation Technology", "Construction Project Management", "Industrial Design"] },
+  I: { name: "Advanced Analytics, Science & Healthcare (The Investigator)[cite: 1]", careers: ["Medicine & Clinical Science", "Data Science & Analytics", "Biotechnology Research", "Pharmaceutical Engineering", "Computer Science Research", "Pure Mathematics", "Clinical Psychology", "Neuroscience Fields"] },
+  A: { name: "Creative Arts, Media & Digital Design (The Creator)[cite: 1]", careers: ["Graphic Design", "UI/UX Experience Design", "Filmmaking & Direction", "Spatial & Exhibit Architecture", "Creative Writing & Journalism", "Fashion Design Management", "Music Production & Scoring", "Advertising & Brand Strategy"] },
+  S: { name: "Social Services, Education & HR Development (The Helper)[cite: 1]", careers: ["Psychology & Family Counselling", "Academic Teaching & Pedagogy", "Social Work & Public Policy", "Healthcare & Nursing Services", "Human Resource Management", "NGO Strategy & Leadership", "Occupational Therapy", "Speech Pathology"] },
+  E: { name: "Corporate Strategy, Leadership & Startups (The Leader)[cite: 1]", careers: ["Entrepreneurship & Innovation", "Marketing & Growth Management", "Corporate Management (Executive MBA)", "Corporate & Cyber Law", "Investment Banking Strategy", "Business Development", "Political Consulting & PR", "Media Venture Management"] },
+  C: { name: "Strategic Finance, Operations & Administration (The Organiser)[cite: 1]", careers: ["Chartered Accountancy (CA)", "Investment Banking & Wealth Management", "Company Secretary (CS)", "Data Infrastructure Analytics", "Global Operations Management", "Risk Audit & Compliance", "Actuarial Science Forecasting", "Supply Chain Architecture"] }
+};
+
+let currentLanguage = 'en';
+let current = 0;
+let answers = {};
+let scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };[cite: 1]
+
+function switchLanguage(langCode) {
+  currentLanguage = langCode;
+  
+  document.querySelectorAll('#global-lang-selector .lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick').includes(`'${langCode}'`));
+  });
+
+  const lex = uiLexicon[langCode];
+  document.getElementById('loc-brand').textContent = lex.brand;
+  document.getElementById('loc-intro-title').textContent = lex.title;
+  document.getElementById('loc-intro-sub').textContent = lex.sub;
+  document.getElementById('loc-meta-time').textContent = lex.time;
+  document.getElementById('loc-meta-questions').textContent = lex.questions;
+  document.getElementById('loc-meta-privacy').textContent = lex.privacy;
+  document.getElementById('loc-meta-device').textContent = lex.device;
+  document.getElementById('loc-btn-start').textContent = lex.startBtn;
+  document.getElementById('loc-intro-footer').textContent = lex.introFoot;
+
+  document.getElementById('loc-onboard-brand').textContent = lex.onboardBrand;
+  document.getElementById('loc-onboard-title').textContent = lex.onboardTitle;
+  document.getElementById('loc-lbl-name').textContent = lex.lblName;
+  document.getElementById('loc-lbl-class').textContent = lex.lblClass;
+  document.getElementById('loc-lbl-phone').textContent = lex.lblPhone;
+  document.getElementById('client-name').placeholder = lex.phName;
+  document.getElementById('client-class').placeholder = lex.phClass;
+  document.getElementById('client-phone').placeholder = lex.phPhone;
+  document.getElementById('btn-submit-test').textContent = lex.btnSubmit;
+
+  document.getElementById('loc-thanks-title').textContent = lex.thanksTitle;
+  document.getElementById('loc-thanks-sub').textContent = lex.thanksSub;
+
+  if (document.getElementById('screen-quiz').classList.contains('active')) {
+    renderQ();
+  }
+}
+
+function startTest() {
+  current = 0;
+  answers = {};
+  scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };[cite: 1]
+  document.getElementById("screen-intro").classList.remove("active");[cite: 1]
+  document.getElementById("screen-quiz").classList.add("active");[cite: 1]
+  renderQ();[cite: 1]
+}
+
+function renderQ() {
+  const q = questions[current];[cite: 1]
+  const lex = uiLexicon[currentLanguage];
+  
+  document.getElementById("q-label").textContent = `${lex.qLabel} ${current + 1} ${lex.qOf} ${questions.length}`;[cite: 1]
+  document.getElementById("q-text").textContent = q.text[currentLanguage];[cite: 1]
+  document.getElementById("q-count").textContent = `${current + 1} / ${questions.length}`;[cite: 1]
+  document.getElementById("prog").style.width = `${Math.round(((current + 1) / questions.length) * 100)}%`;[cite: 1]
+  
+  const opts = document.getElementById("q-options");[cite: 1]
+  opts.innerHTML = "";[cite: 1]
+  
+  q.options.forEach((opt, i) => {[cite: 1]
+    const btn = document.createElement("button");[cite: 1]
+    btn.className = "opt-btn" + (answers[current] === i ? " selected" : "");[cite: 1]
+    btn.textContent = opt.labels[currentLanguage];[cite: 1]
+    btn.onclick = () => selectOpt(i);[cite: 1]
+    opts.appendChild(btn);[cite: 1]
+  });
+  
+  document.getElementById("btn-back").textContent = lex.btnBack;
+  document.getElementById("btn-back").disabled = current === 0;[cite: 1]
+  
+  const nextBtn = document.getElementById("btn-next");[cite: 1]
+  nextBtn.disabled = answers[current] === undefined;[cite: 1]
+  nextBtn.textContent = current === questions.length - 1 ? lex.btnFinish : lex.btnNext;[cite: 1]
+}
+
+function selectOpt(i) {
+  answers[current] = i;[cite: 1]
+  document.querySelectorAll(".opt-btn").forEach((b, idx) => b.classList.toggle("selected", idx === i));[cite: 1]
+  document.getElementById("btn-next").disabled = false;[cite: 1]
+}
+
+function goNext() {
+  if (current === questions.length - 1) {[cite: 1]
+    calculateScores();
+    document.getElementById("screen-quiz").classList.remove("active");[cite: 1]
+    document.getElementById("screen-onboarding").classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });[cite: 1]
+    return;
+  }
+  current++;[cite: 1]
+  renderQ();[cite: 1]
+}
+
+function goBack() { if (current > 0) { current--; renderQ(); } }[cite: 1]
+
+function calculateScores() {
+  scores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+  Object.entries(answers).forEach(([qIdx, optIdx]) => {[cite: 1]
+    const opt = questions[qIdx].options[optIdx];[cite: 1]
+    if (opt.vals) {[cite: 1]
+      Object.entries(opt.vals).forEach(([k, v]) => { scores[k] = (scores[k] || 0) + v; });[cite: 1]
+    }
+  });
+}
+
+function validateOnboardingForm() {
+  const name = document.getElementById("client-name").value.trim();
+  const cl = document.getElementById("client-class").value.trim();
+  const phone = document.getElementById("client-phone").value.trim();
+  document.getElementById("btn-submit-test").disabled = !(name && cl && phone);
+}
+
+function processFinalSubmission() {
+  const name = document.getElementById("client-name").value.trim();
+  const cl = document.getElementById("client-class").value.trim();
+  const phone = document.getElementById("client-phone").value.trim();
+  
+  const sortedProfiles = Object.entries(scores).sort((a, b) => b[1] - a[1]);[cite: 1]
+  const bestFitKey = sortedProfiles[0][0];[cite: 1]
+  const fitStream = profiles[bestFitKey];[cite: 1]
+  const totalScorePoints = Math.max(1, sortedProfiles.reduce((s, x) => s + x[1], 0));[cite: 1]
+  
+  // Format clean diagnostic tables inside the plain text email
+  let profileBreakdownText = "";
+  sortedProfiles.forEach(([key, val]) => {
+    let percentage = Math.round((val / totalScorePoints) * 100);[cite: 1]
+    profileBreakdownText += `${profiles[key].name}: ${percentage}%\n`;
+  });
+
+  let diagnosticCareersText = "";
+  fitStream.careers.slice(0, 6).forEach((career, index) => {
+    diagnosticCareersText += `${index + 1}. ${career}\n`;
+  });
+
+  // Construct structured plain text email payload text body
+  const rawEmailPayloadBody = `
+CAREER DISCOVERY ASSESSMENT REPORT
+==========================================
+
+STUDENT PROFILE DATA:
+------------------------------------------
+Full Name: ${name}
+Class / Academic Group: ${cl}
+Contact Phone Number: ${phone}
+Test Language Chosen: ${currentLanguage.toUpperCase()}
+
+ASSESSMENT DIAGNOSTICS:
+------------------------------------------
+🎯 BEST FIT STREAM: 
+${fitStream.name.toUpperCase()}
+
+🚀 SUGGESTED CAREER OPTIONS (MINIMUM 5):
+${diagnosticCareersText}
+COMPLETE RIASEC PROFILE BREAKDOWN:
+${profileBreakdownText}
+==========================================
+Report compiled automatically and dispatched safely to your profile mailbox.
+  `;
+
+  // UI Updates: Switch away from form instantly so client sees success response
+  document.getElementById("screen-onboarding").classList.remove("active");
+  document.getElementById("screen-result").classList.add("active");[cite: 1]
+  document.getElementById("global-lang-selector").style.display = "none";
+  window.scrollTo({ top: 0, behavior: "smooth" });[cite: 1]
+
+  // Fire transaction engine deployment
+  const emailServiceParameters = {
+    to_coach_email: "bargep11@gmail.com",
+    student_name: name,
+    assessment_report: rawEmailPayloadBody
+  };
+
+  emailjs.send("service_x99wbe6", "template_n6t9q3c", emailServiceParameters)
+    .then(function(response) {
+       console.log('Success! Data routed cleanly to your mailbox.', response.status, response.text);
+    }, function(error) {
+       console.error('System failed to dispatch analysis metrics:', error);
+    });
+}
+</script>
+</body>
+</html>
