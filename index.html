@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Career & Personality Assessment</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f7;color:#1d1d1f;min-height:100vh;padding:2rem 1rem}
+  .wrap{max-width:680px;margin:0 auto}
+  .lang-bar{display:flex;gap:8px;justify-content:flex-end;margin-bottom:1.5rem}
+  .lang-btn{padding:6px 16px;border:1.5px solid #d1d1d6;border-radius:20px;background:#fff;color:#555;font-size:13px;cursor:pointer;transition:all 0.15s;font-weight:500}
+  .lang-btn.active{background:#7F77DD;color:#fff;border-color:#7F77DD}
+  .header{text-align:center;margin-bottom:2rem}
+  .header .icon{font-size:40px;margin-bottom:10px}
+  .header h1{font-size:24px;font-weight:600;color:#1d1d1f;margin-bottom:6px}
+  .header p{font-size:14px;color:#6e6e73}
+  .progress-bar{height:5px;background:#e5e5ea;border-radius:3px;margin-bottom:2rem;overflow:hidden}
+  .progress-fill{height:100%;background:#7F77DD;border-radius:3px;transition:width 0.4s ease}
+  .section-label{font-size:11px;font-weight:600;color:#7F77DD;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px}
+  .card{background:#fff;border:1px solid #e5e5ea;border-radius:16px;padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+  .q-text{font-size:15px;color:#1d1d1f;margin-bottom:1rem;line-height:1.6;font-weight:500}
+  .options{display:flex;flex-direction:column;gap:8px}
+  .opt{display:flex;align-items:center;gap:12px;padding:11px 14px;border:1.5px solid #e5e5ea;border-radius:12px;cursor:pointer;transition:all 0.15s;font-size:14px;color:#1d1d1f;background:#fff}
+  .opt:hover{border-color:#c7c7cc;background:#fafafa}
+  .opt.selected{border-color:#7F77DD;background:#EEEDFE;color:#3C3489}
+  .radio-circle{width:20px;height:20px;border-radius:50%;border:2px solid #c7c7cc;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color 0.15s}
+  .opt.selected .radio-circle{border-color:#7F77DD}
+  .radio-dot{width:10px;height:10px;border-radius:50%;background:#7F77DD;display:none}
+  .opt.selected .radio-dot{display:block}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:1.5rem}
+  .btn{padding:11px 26px;border:1.5px solid #d1d1d6;border-radius:12px;background:#fff;color:#1d1d1f;font-size:14px;cursor:pointer;transition:all 0.15s;font-weight:500}
+  .btn:hover{background:#f5f5f7}
+  .btn.primary{background:#7F77DD;color:#fff;border-color:#7F77DD;font-weight:600}
+  .btn.primary:hover{background:#6560c4}
+  .btn:disabled{opacity:0.35;cursor:not-allowed}
+  .step-info{font-size:13px;color:#6e6e73}
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  .field-row.full{grid-template-columns:1fr}
+  .field-label{font-size:13px;color:#6e6e73;margin-bottom:5px;font-weight:500}
+  input,select{width:100%;padding:10px 14px;border:1.5px solid #d1d1d6;border-radius:10px;background:#fff;color:#1d1d1f;font-size:14px;outline:none;transition:border-color 0.15s}
+  input:focus,select:focus{border-color:#7F77DD}
+  .loading-view{display:none;text-align:center;padding:4rem 1rem;background:#fff;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+  .spinner{width:40px;height:40px;border:3px solid #e5e5ea;border-top-color:#7F77DD;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1.5rem}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .success-view{display:none;text-align:center;padding:3rem 1rem;background:#fff;border-radius:20px;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+  .success-icon{width:80px;height:80px;border-radius:50%;background:#E1F5EE;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:36px}
+  .success-view h2{font-size:24px;font-weight:600;color:#1d1d1f;margin-bottom:10px}
+  .success-view p{font-size:15px;color:#6e6e73;margin-bottom:1rem;line-height:1.7}
+  .contact-card{background:#EEEDFE;border:1.5px solid #AFA9EC;border-radius:16px;padding:1.5rem;display:inline-block;margin-top:1rem;min-width:260px}
+  .contact-card p{font-size:13px;color:#534AB7;margin-bottom:6px;font-weight:500}
+  .contact-card h3{font-size:22px;font-weight:700;color:#3C3489}
+  @media(max-width:540px){.field-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem">
+    <div style="font-size:15px;font-weight:700;color:#0047FF;letter-spacing:0.01em">Tizzle <span style="font-weight:400;color:#0047FF">by Priyanka Barge</span></div>
+    <div class="lang-bar" style="margin-bottom:0">
+      <button class="lang-btn active" onclick="setLang('en',this)">English</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिंदी</button>
+      <button class="lang-btn" onclick="setLang('mr',this)">मराठी</button>
+    </div>
+  </div>
+  <div id="info-view">
+    <div class="header">
+      <div class="icon">🧠</div>
+      <h1 id="title-main">Career & Personality Assessment</h1>
+      <p id="title-sub">Class 10, 11 & 12 · 40 questions · ~12 minutes</p>
+    </div>
+    <div class="card">
+      <div class="field-row">
+        <div><div class="field-label" id="lbl-name">Full name</div><input id="s-name" placeholder="Your full name"></div>
+        <div><div class="field-label" id="lbl-class">Class</div>
+          <select id="s-class"><option value="">Select</option><option>Class 10</option><option>Class 11</option><option>Class 12</option></select>
+        </div>
+      </div>
+      <div class="field-row">
+        <div><div class="field-label" id="lbl-school">School name</div><input id="s-school" placeholder="School name"></div>
+        <div><div class="field-label" id="lbl-phone">Phone number</div><input id="s-phone" placeholder="10-digit number" maxlength="10" type="tel"></div>
+      </div>
+      <div class="field-row full">
+        <div><div class="field-label" id="lbl-stream">Current stream (if applicable)</div>
+          <select id="s-stream"><option value="">Not yet decided</option><option>Science (PCM)</option><option>Science (PCB)</option><option>Commerce</option><option>Arts / Humanities</option></select>
+        </div>
+      </div>
+      <div style="margin-top:1rem">
+        <button class="btn primary" onclick="startTest()" id="start-btn" style="width:100%;padding:14px;">Start Assessment →</button>
+      </div>
+    </div>
+  </div>
+  <div id="test-view" style="display:none">
+    <div class="progress-bar"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+    <div id="section-label" class="section-label"></div>
+    <div id="questions-container"></div>
+    <div class="nav">
+      <button class="btn" id="prev-btn" onclick="prevSection()" disabled>← <span id="lbl-prev">Previous</span></button>
+      <span class="step-info" id="step-info"></span>
+      <button class="btn primary" id="next-btn" onclick="nextSection()"><span id="lbl-next">Next</span> →</button>
+    </div>
+  </div>
+  <div class="loading-view" id="loading-view">
+    <div class="spinner"></div>
+    <p id="loading-msg" style="font-size:15px;color:#1d1d1f;font-weight:500;margin-bottom:6px">Generating your report...</p>
+    <p id="loading-sub" style="font-size:13px;color:#6e6e73">Please wait, do not close this window.</p>
+  </div>
+  <div class="success-view" id="success-view">
+    <div class="success-icon">✓</div>
+    <h2 id="success-title">Test submitted successfully!</h2>
+    <p id="success-msg">Thank you for completing the assessment.<br>Your responses have been carefully recorded.</p>
+    <div class="contact-card">
+      <div style="font-size:13px;font-weight:700;color:#0047FF;margin-bottom:2px">Tizzle by Priyanka Barge</div>
+      <p id="contact-label">Contact your career coach for your personalised report:</p>
+      <h3>📞 9067290738</h3>
+    </div>
+  </div>
+</div>
+
+<script>
+const FORMSPREE='https://formspree.io/f/mwvzzygg';
+let lang='en',current=0,answers={},studentInfo={};
+
+const tx={
+  en:{titleMain:'Career & Personality Assessment',titleSub:'Class 10, 11 & 12 · 40 questions · ~12 minutes',lblName:'Full name',lblClass:'Class',lblSchool:'School name',lblPhone:'Phone number',lblStream:'Current stream (if applicable)',startBtn:'Start Assessment →',prev:'Previous',next:'Next',submit:'Submit Assessment',secLabels:['Section 1 of 5 — Personality','Section 2 of 5 — Aptitude','Section 3 of 5 — Career Interest','Section 4 of 5 — Learning Style','Section 5 of 5 — Skills & Strengths'],of:'of',section:'Section',loadingMsg:'Submitting your assessment...',loadingSub:'Please wait, do not close this window.',successTitle:'Test submitted successfully!',successMsg:'Thank you for completing the assessment.<br>Your responses have been carefully recorded.',contactLabel:'Contact your career coach for your personalised report:',alertInfo:'Please fill in all your details before starting.',alertAnswer:'Please answer all questions in this section to continue.'},
+  hi:{titleMain:'करियर और व्यक्तित्व मूल्यांकन',titleSub:'कक्षा 10, 11 और 12 · 40 प्रश्न · ~12 मिनट',lblName:'पूरा नाम',lblClass:'कक्षा',lblSchool:'विद्यालय का नाम',lblPhone:'फोन नंबर',lblStream:'वर्तमान स्ट्रीम (यदि लागू हो)',startBtn:'परीक्षा शुरू करें →',prev:'पिछला',next:'अगला',submit:'परीक्षा जमा करें',secLabels:['भाग 1/5 — व्यक्तित्व','भाग 2/5 — योग्यता','भाग 3/5 — करियर रुचि','भाग 4/5 — सीखने की शैली','भाग 5/5 — कौशल और शक्तियाँ'],of:'में से',section:'भाग',loadingMsg:'जमा किया जा रहा है...',loadingSub:'कृपया प्रतीक्षा करें, यह विंडो बंद न करें।',successTitle:'परीक्षा सफलतापूर्वक जमा हो गई!',successMsg:'मूल्यांकन पूरा करने के लिए धन्यवाद।<br>आपके उत्तर दर्ज कर लिए गए हैं।',contactLabel:'अपनी व्यक्तिगत रिपोर्ट के लिए करियर कोच से संपर्क करें:',alertInfo:'कृपया शुरू करने से पहले सभी विवरण भरें।',alertAnswer:'कृपया इस भाग के सभी प्रश्नों का उत्तर दें।'},
+  mr:{titleMain:'करिअर आणि व्यक्तिमत्व मूल्यांकन',titleSub:'इयत्ता 10, 11 आणि 12 · 40 प्रश्न · ~12 मिनिटे',lblName:'पूर्ण नाव',lblClass:'इयत्ता',lblSchool:'शाळेचे नाव',lblPhone:'फोन नंबर',lblStream:'सध्याचा विभाग (लागू असल्यास)',startBtn:'परीक्षा सुरू करा →',prev:'मागील',next:'पुढील',submit:'परीक्षा सबमिट करा',secLabels:['भाग 1/5 — व्यक्तिमत्व','भाग 2/5 — अभियोग्यता','भाग 3/5 — करिअर आवड','भाग 4/5 — शिकण्याची पद्धत','भाग 5/5 — कौशल्ये आणि सामर्थ्य'],of:'पैकी',section:'भाग',loadingMsg:'सबमिट केले जात आहे...',loadingSub:'कृपया थांबा, ही विंडो बंद करू नका.',successTitle:'परीक्षा यशस्वीरित्या सबमिट झाली!',successMsg:'मूल्यांकन पूर्ण केल्याबद्दल धन्यवाद.<br>तुमची उत्तरे नोंदवली गेली आहेत.',contactLabel:'तुमच्या वैयक्तिक अहवालासाठी करिअर कोचशी संपर्क करा:',alertInfo:'कृपया सुरू करण्यापूर्वी सर्व माहिती भरा.',alertAnswer:'कृपया या भागातील सर्व प्रश्नांची उत्तरे द्या.'}
+};
+
+const sections={
+  en:[
+    {id:'personality',questions:[
+      {id:'p1',text:'When you have free time, you prefer to:',opts:['Hang out with a large group of friends','Spend time with one or two close friends','Explore a new hobby or creative project','Recharge alone — reading, gaming, or relaxing']},
+      {id:'p2',text:'When faced with a difficult decision, you tend to:',opts:['Follow your gut feeling','Weigh all options logically before deciding','Ask for opinions from trusted friends or family','Research extensively before taking any step']},
+      {id:'p3',text:'In a group project, you naturally:',opts:['Take the lead and assign tasks','Contribute ideas and support the leader','Focus on getting your part done perfectly','Make sure everyone is comfortable and heard']},
+      {id:'p4',text:'How do you feel about routines?',opts:['Love them — structure gives me comfort','Prefer some routine but enjoy flexibility','Find them boring — I like variety','Work best under pressure without strict routines']},
+      {id:'p5',text:'When something goes wrong, you:',opts:['Analyse what happened and fix it logically','Get frustrated but recover quickly','Seek support from someone you trust','Stay calm and think of the bigger picture']},
+      {id:'p6',text:'Which word best describes you?',opts:['Leader','Thinker','Creator','Caregiver']},
+      {id:'p7',text:'In a debate, you are more likely to:',opts:['Argue based on facts and data','Argue based on values and emotions','Listen first, then share your view','Come up with a creative middle ground']},
+      {id:'p8',text:'Your friends would describe you as:',opts:['Ambitious and driven','Thoughtful and analytical','Fun and spontaneous','Warm and empathetic']},
+    ]},
+    {id:'aptitude',questions:[
+      {id:'a1',text:'Which of these activities do you find easiest?',opts:['Solving maths problems','Writing essays or stories','Drawing, designing or building things','Explaining concepts to others clearly']},
+      {id:'a2',text:'You are best at:',opts:['Spotting patterns and numbers','Remembering and analysing information','Visualising how things look or work in 3D','Understanding people and their emotions']},
+      {id:'a3',text:'Which subject do you score highest in naturally?',opts:['Mathematics or Physics','History, Geography, or Literature','Art, Computer Science, or Practical subjects','Biology, Psychology, or Social Studies']},
+      {id:'a4',text:'When you read something complex, you:',opts:['Break it into logical steps','Look for the bigger narrative or argument','Visualise it as a diagram or flowchart','Think about how it affects people']},
+      {id:'a5',text:'Which task sounds most like fun to you?',opts:['Solving a tricky puzzle or equation','Writing a review or speech','Designing a poster or building a prototype','Organising a fundraiser or helping a peer']},
+      {id:'a6',text:'Your strongest skill is:',opts:['Numerical reasoning','Verbal communication','Spatial or visual thinking','Interpersonal and emotional intelligence']},
+      {id:'a7',text:'How quickly do you learn new software or technology?',opts:['Very fast — I love exploring tech','Fairly quickly if I read about it first','I learn by trial and error — hands on','I prefer asking someone to guide me']},
+      {id:'a8',text:'Which type of task do you complete fastest?',opts:['Calculations or logic puzzles','Reading comprehension or writing tasks','Drawing, coding, or building tasks','Group discussions or helping tasks']},
+    ]},
+    {id:'interest',questions:[
+      {id:'i1',text:'Which of these sounds most exciting to you?',opts:['Running your own startup','Conducting scientific research','Creating art, music or media','Helping communities or teaching']},
+      {id:'i2',text:'Where would you love to work?',opts:['A fast-paced corporate office','A university or research lab','A studio, tech company or creative agency','A hospital, school, or non-profit']},
+      {id:'i3',text:'What matters most in your future career?',opts:['High income and status','Discovery and knowledge','Creative expression and impact','Helping and making a difference']},
+      {id:'i4',text:'Which topic could you talk about for hours?',opts:['Business, money, or current affairs','Science, space, or how things work','Technology, design, gaming, or culture','People, society, mental health, or education']},
+      {id:'i5',text:'Your ideal work involves:',opts:['Making key decisions and leading teams','Researching, testing and finding answers','Building, designing or making content','Caring for, guiding or educating people']},
+      {id:'i6',text:'Which would you prefer on a Saturday?',opts:['Attending a business or entrepreneurship workshop','Visiting a science museum or tech expo','Going to an art exhibition or hackathon','Volunteering or attending a social awareness event']},
+      {id:'i7',text:'If you had ₹10 lakhs to invest, you would:',opts:['Start a business','Fund a research project','Build a product or creative venture','Donate to or build a social cause']},
+      {id:'i8',text:'Which role sounds most like your dream job?',opts:['CEO, entrepreneur, or manager','Scientist, doctor, or researcher','Engineer, designer, or developer','Teacher, counsellor, or social worker']},
+    ]},
+    {id:'learning',questions:[
+      {id:'l1',text:'You learn best when:',opts:['You read or take detailed notes','You see diagrams, charts or videos','You do it hands-on yourself','You discuss it with someone']},
+      {id:'l2',text:'When revising for exams, you prefer:',opts:['Writing and re-reading notes','Mind maps, colour coding and flashcards','Solving past papers and practising problems','Teaching the topic to a friend or family member']},
+      {id:'l3',text:'You remember things best when they are:',opts:['Written down clearly and logically','Shown visually or with pictures','Connected to something you physically did','Explained through stories or conversations']},
+      {id:'l4',text:'In class, which teacher style helps you most?',opts:['A teacher who gives detailed structured notes','One who uses lots of diagrams and videos','One who does live demos and experiments','One who encourages class discussions']},
+      {id:'l5',text:'If you are lost in a new city, you prefer to:',opts:['Read a map or follow written directions','Follow a GPS with visual maps','Just walk around and figure it out','Ask a local for directions']},
+      {id:'l6',text:'How long can you focus when studying alone?',opts:['Very long — I love studying in depth','Fairly long if visuals keep me engaged','Short — I need breaks and activities','Medium — I need someone to study with']},
+    ]},
+    {id:'skills',questions:[
+      {id:'s1',text:'Which of these comes most naturally to you?',opts:['Organising and planning things','Analysing data and spotting errors','Creating something new from scratch','Motivating or inspiring others']},
+      {id:'s2',text:'When you take on a project, others rely on you for:',opts:['Keeping everything on track and deadlines','Accuracy, research and quality','Fresh ideas and creative execution','Team harmony and motivation']},
+      {id:'s3',text:'Which of these have you done or enjoyed?',opts:['Started a club, team or small initiative','Built a model, coded, or did a science project','Made art, music, videos or content','Mentored, tutored or helped peers']},
+      {id:'s4',text:'Your biggest strength is:',opts:['Leadership and organisation','Critical thinking and logic','Creativity and innovation','Empathy and communication']},
+      {id:'s5',text:'Your strongest part of a school presentation is:',opts:['The clear structure and delivery','The depth of research and accuracy','The design and visual appeal','The way you connect with the audience']},
+      {id:'s6',text:'Which skill would you most like to develop?',opts:['Business strategy and management','Data science or technical skills','Design, coding or artistic skills','Communication or social impact skills']},
+    ]}
+  ],
+  hi:[
+    {id:'personality',questions:[
+      {id:'p1',text:'जब आपके पास खाली समय होता है, तो आप क्या पसंद करते हैं?',opts:['बड़े दोस्तों के समूह के साथ घूमना','एक-दो करीबी दोस्तों के साथ समय बिताना','कोई नई हॉबी या रचनात्मक प्रोजेक्ट आज़माना','अकेले आराम करना — पढ़ना, गेमिंग, या रिलैक्स करना']},
+      {id:'p2',text:'कठिन निर्णय के सामने आप आमतौर पर:',opts:['अपनी सहज भावना का अनुसरण करते हैं','सभी विकल्पों को तार्किक रूप से तौलकर निर्णय लेते हैं','विश्वसनीय लोगों की राय माँगते हैं','निर्णय से पहले व्यापक शोध करते हैं']},
+      {id:'p3',text:'ग्रुप प्रोजेक्ट में आप स्वाभाविक रूप से:',opts:['नेतृत्व संभालते हैं और काम बाँटते हैं','विचार देते हैं और नेता का साथ देते हैं','अपना काम परफेक्ट तरीके से करने पर ध्यान देते हैं','सभी को सहज और सुना हुआ महसूस कराते हैं']},
+      {id:'p4',text:'नियमित दिनचर्या के बारे में आपका क्या विचार है?',opts:['मुझे पसंद है — संरचना मुझे आरामदायक लगती है','कुछ नियमितता ठीक है लेकिन लचीलापन भी चाहिए','उबाऊ लगती है — मुझे विविधता पसंद है','दबाव में बिना सख्त नियमों के बेहतर काम करता हूँ']},
+      {id:'p5',text:'जब कुछ गलत होता है, तो आप:',opts:['विश्लेषण करके तार्किक रूप से ठीक करते हैं','थोड़ा निराश होते हैं लेकिन जल्दी उभरते हैं','किसी विश्वसनीय व्यक्ति से सहारा लेते हैं','शांत रहकर बड़ी तस्वीर देखते हैं']},
+      {id:'p6',text:'आपको सबसे अच्छा कौन सा शब्द दर्शाता है?',opts:['नेता','विचारक','रचनाकार','देखभाल करने वाला']},
+      {id:'p7',text:'बहस में आप आमतौर पर:',opts:['तथ्यों और डेटा के आधार पर तर्क देते हैं','मूल्यों और भावनाओं के आधार पर बात करते हैं','पहले सुनते हैं, फिर अपना दृष्टिकोण बताते हैं','रचनात्मक मध्यम मार्ग निकालते हैं']},
+      {id:'p8',text:'आपके दोस्त आपको कैसे बताएँगे?',opts:['महत्वाकांक्षी और दृढ़','विचारशील और विश्लेषणात्मक','मज़ेदार और स्वतःस्फूर्त','गर्मजोशी भरे और सहानुभूतिपूर्ण']},
+    ]},
+    {id:'aptitude',questions:[
+      {id:'a1',text:'इनमें से कौन सी गतिविधि आपको सबसे आसान लगती है?',opts:['गणित के सवाल हल करना','निबंध या कहानियाँ लिखना','चित्र बनाना, डिज़ाइन करना या कुछ बनाना','दूसरों को अवधारणाएँ स्पष्ट रूप से समझाना']},
+      {id:'a2',text:'आप सबसे बेहतर हैं:',opts:['पैटर्न और संख्याएँ पहचानने में','जानकारी याद रखने और विश्लेषण में','चीज़ों को 3D में देखने में','लोगों और उनकी भावनाओं को समझने में']},
+      {id:'a3',text:'किस विषय में आप स्वाभाविक रूप से अच्छे हैं?',opts:['गणित या भौतिकी','इतिहास, भूगोल, या साहित्य','कला, कंप्यूटर विज्ञान, या प्रायोगिक विषय','जीव विज्ञान, मनोविज्ञान, या सामाजिक अध्ययन']},
+      {id:'a4',text:'जब आप कुछ जटिल पढ़ते हैं, तो आप:',opts:['इसे तार्किक चरणों में तोड़ते हैं','बड़े संदर्भ या तर्क को देखते हैं','इसे आरेख या फ्लोचार्ट के रूप में देखते हैं','सोचते हैं कि यह लोगों को कैसे प्रभावित करता है']},
+      {id:'a5',text:'कौन सा काम आपको सबसे मज़ेदार लगता है?',opts:['कोई मुश्किल पहेली या समीकरण हल करना','समीक्षा या भाषण लिखना','पोस्टर डिज़ाइन करना या प्रोटोटाइप बनाना','फंडरेज़र आयोजित करना या किसी की मदद करना']},
+      {id:'a6',text:'आपका सबसे मजबूत कौशल है:',opts:['संख्यात्मक तर्क','मौखिक संचार','स्थानिक या दृश्य सोच','पारस्परिक और भावनात्मक बुद्धिमत्ता']},
+      {id:'a7',text:'आप नए सॉफ़्टवेयर या तकनीक कितनी जल्दी सीखते हैं?',opts:['बहुत जल्दी — मुझे टेक एक्सप्लोर करना पसंद है','काफी जल्दी अगर पहले पढ़ लूँ','परीक्षण करके सीखता हूँ — हाथों-हाथ','किसी को गाइड करने के लिए कहना पसंद करता हूँ']},
+      {id:'a8',text:'कौन सा काम आप सबसे तेज़ पूरा करते हैं?',opts:['गणना या तर्क पहेलियाँ','पठन बोध या लेखन कार्य','चित्रकारी, कोडिंग, या निर्माण कार्य','समूह चर्चा या सहायता कार्य']},
+    ]},
+    {id:'interest',questions:[
+      {id:'i1',text:'इनमें से कौन सा आपको सबसे रोमांचक लगता है?',opts:['अपना स्टार्टअप चलाना','वैज्ञानिक अनुसंधान करना','कला, संगीत या मीडिया बनाना','समुदायों की मदद करना या पढ़ाना']},
+      {id:'i2',text:'आप कहाँ काम करना पसंद करेंगे?',opts:['एक तेज़-रफ़्तार कॉर्पोरेट कार्यालय','एक विश्वविद्यालय या अनुसंधान प्रयोगशाला','एक स्टूडियो, टेक कंपनी या रचनात्मक एजेंसी','एक अस्पताल, स्कूल, या गैर-लाभकारी संस्था']},
+      {id:'i3',text:'आपके भविष्य के करियर में सबसे महत्वपूर्ण क्या है?',opts:['उच्च आय और प्रतिष्ठा','खोज और ज्ञान','रचनात्मक अभिव्यक्ति और प्रभाव','मदद करना और फर्क डालना']},
+      {id:'i4',text:'किस विषय पर आप घंटों बात कर सकते हैं?',opts:['व्यापार, पैसा, या समसामयिक मामले','विज्ञान, अंतरिक्ष, या चीज़ें कैसे काम करती हैं','तकनीक, डिज़ाइन, गेमिंग, या संस्कृति','लोग, समाज, मानसिक स्वास्थ्य, या शिक्षा']},
+      {id:'i5',text:'आपके आदर्श काम में शामिल है:',opts:['महत्वपूर्ण निर्णय लेना और टीम का नेतृत्व करना','अनुसंधान, परीक्षण और उत्तर खोजना','निर्माण, डिज़ाइन या सामग्री बनाना','लोगों की देखभाल करना, मार्गदर्शन या शिक्षा देना']},
+      {id:'i6',text:'शनिवार को आप क्या करना पसंद करेंगे?',opts:['व्यापार या उद्यमिता कार्यशाला में भाग लेना','विज्ञान संग्रहालय या टेक एक्सपो जाना','कला प्रदर्शनी या हैकाथॉन में जाना','स्वयंसेवा या सामाजिक जागरूकता कार्यक्रम में जाना']},
+      {id:'i7',text:'अगर आपके पास ₹10 लाख निवेश करने को हों, तो आप:',opts:['एक व्यवसाय शुरू करेंगे','एक शोध परियोजना को वित्त पोषित करेंगे','एक उत्पाद या रचनात्मक उद्यम बनाएँगे','किसी सामाजिक कारण के लिए दान करेंगे']},
+      {id:'i8',text:'कौन सी भूमिका आपके सपनों की नौकरी जैसी लगती है?',opts:['CEO, उद्यमी, या प्रबंधक','वैज्ञानिक, डॉक्टर, या शोधकर्ता','इंजीनियर, डिज़ाइनर, या डेवलपर','शिक्षक, परामर्शदाता, या सामाजिक कार्यकर्ता']},
+    ]},
+    {id:'learning',questions:[
+      {id:'l1',text:'आप सबसे अच्छा कब सीखते हैं?',opts:['जब आप पढ़ते हैं या विस्तृत नोट्स लेते हैं','जब आप आरेख, चार्ट या वीडियो देखते हैं','जब आप खुद हाथों-हाथ करते हैं','जब आप किसी से चर्चा करते हैं']},
+      {id:'l2',text:'परीक्षा की तैयारी में आप क्या पसंद करते हैं?',opts:['नोट्स लिखना और दोबारा पढ़ना','माइंड मैप, रंग कोडिंग और फ्लैशकार्ड','पिछले पेपर हल करना और अभ्यास करना','किसी दोस्त या परिवार को विषय पढ़ाना']},
+      {id:'l3',text:'आपको चीज़ें सबसे अच्छी याद रहती हैं जब वे:',opts:['स्पष्ट और तार्किक रूप से लिखी हों','चित्रों या दृश्यों के साथ दिखाई जाएँ','किसी शारीरिक गतिविधि से जुड़ी हों','कहानियों या बातचीत के ज़रिए समझाई जाएँ']},
+      {id:'l4',text:'कक्षा में कौन सी शिक्षण शैली आपकी सबसे अधिक मदद करती है?',opts:['विस्तृत संरचित नोट्स देने वाला शिक्षक','आरेख और वीडियो का उपयोग करने वाला','लाइव डेमो और प्रयोग करने वाला','कक्षा चर्चा को प्रोत्साहित करने वाला']},
+      {id:'l5',text:'अगर आप किसी नए शहर में रास्ता भटक जाएँ, तो आप:',opts:['नक्शा पढ़ेंगे या लिखे निर्देश फ़ॉलो करेंगे','दृश्य नक्शे के साथ GPS का उपयोग करेंगे','बस इधर-उधर चलेंगे और समझ लेंगे','किसी स्थानीय से रास्ता पूछेंगे']},
+      {id:'l6',text:'अकेले पढ़ते समय आप कितनी देर फ़ोकस रह सकते हैं?',opts:['बहुत लंबे समय तक — गहन अध्ययन पसंद है','काफी देर अगर दृश्य सामग्री हो','कम समय — ब्रेक और गतिविधियाँ चाहिए','मध्यम समय — किसी के साथ पढ़ना ज़रूरी है']},
+    ]},
+    {id:'skills',questions:[
+      {id:'s1',text:'इनमें से कौन सी चीज़ आपको सबसे स्वाभाविक रूप से आती है?',opts:['चीज़ों को व्यवस्थित और योजनाबद्ध करना','डेटा का विश्लेषण और त्रुटियाँ ढूँढना','कुछ नया बनाना','दूसरों को प्रेरित या प्रोत्साहित करना']},
+      {id:'s2',text:'किसी प्रोजेक्ट में दूसरे आप पर निर्भर करते हैं:',opts:['सब कुछ समय पर रखने के लिए','सटीकता, शोध और गुणवत्ता के लिए','नए विचारों और रचनात्मक निष्पादन के लिए','टीम में सामंजस्य और प्रेरणा के लिए']},
+      {id:'s3',text:'आपने इनमें से क्या किया है या क्या आनंद आया?',opts:['कोई क्लब, टीम या पहल शुरू की','मॉडल बनाया, कोड किया, या विज्ञान प्रोजेक्ट किया','कला, संगीत, वीडियो या सामग्री बनाई','दोस्तों को मेंटर किया, पढ़ाया या मदद की']},
+      {id:'s4',text:'आपकी सबसे बड़ी ताकत है:',opts:['नेतृत्व और संगठन','आलोचनात्मक सोच और तर्क','रचनात्मकता और नवाचार','सहानुभूति और संचार']},
+      {id:'s5',text:'स्कूल प्रेजेंटेशन में आपका सबसे मजबूत हिस्सा है:',opts:['स्पष्ट संरचना और प्रस्तुति','शोध की गहराई और सटीकता','डिज़ाइन और दृश्य अपील','दर्शकों से जुड़ने का तरीका']},
+      {id:'s6',text:'आप किस कौशल को सबसे अधिक विकसित करना चाहेंगे?',opts:['व्यापार रणनीति और प्रबंधन','डेटा विज्ञान या तकनीकी कौशल','डिज़ाइन, कोडिंग या कलात्मक कौशल','संचार या सामाजिक प्रभाव कौशल']},
+    ]}
+  ],
+  mr:[
+    {id:'personality',questions:[
+      {id:'p1',text:'मोकळा वेळ असताना तुम्ही काय पसंत करता?',opts:['मोठ्या मित्र-मैत्रिणींच्या गटात वेळ घालवणे','एक-दोन जवळच्या मित्रांसोबत वेळ घालवणे','नवीन छंद किंवा सर्जनशील प्रकल्प एक्सप्लोर करणे','एकट्याने रिचार्ज होणे — वाचणे, गेमिंग किंवा विश्रांती']},
+      {id:'p2',text:'कठीण निर्णयाला सामोरे जाताना तुम्ही सहसा:',opts:['तुमच्या अंतर्मनाचे ऐकता','निर्णय घेण्यापूर्वी सर्व पर्यायांचा तार्किक विचार करता','विश्वासू लोकांकडून मत मागता','कोणतेही पाऊल उचलण्यापूर्वी सखोल संशोधन करता']},
+      {id:'p3',text:'गट प्रकल्पात तुम्ही स्वाभाविकपणे:',opts:['नेतृत्व घेता आणि कामे वाटता','कल्पना देता आणि नेत्याला आधार देता','तुमचा भाग परिपूर्णपणे पूर्ण करण्यावर लक्ष केंद्रित करता','प्रत्येकजण सोयीस्कर आणि ऐकला जाईल याची खात्री करता']},
+      {id:'p4',text:'नियमित दिनचर्येबद्दल तुम्हाला कसे वाटते?',opts:['आवडते — रचना मला सोयीस्कर वाटते','काही नियमितता ठीक आहे पण लवचिकताही हवी','कंटाळवाणे वाटते — मला विविधता आवडते','कठोर नियमांशिवाय दबावाखाली सर्वोत्तम काम करतो']},
+      {id:'p5',text:'काहीतरी चुकले तर तुम्ही:',opts:['काय घडले ते विश्लेषण करून तार्किकरित्या दुरुस्त करता','थोडे निराश होता पण लवकर सावरता','विश्वासू व्यक्तीकडून आधार घेता','शांत राहून मोठे चित्र पाहता']},
+      {id:'p6',text:'तुम्हाला कोणता शब्द सर्वात चांगला दर्शवतो?',opts:['नेता','विचारक','निर्माता','काळजी घेणारा']},
+      {id:'p7',text:'वादविवादात तुम्ही सहसा:',opts:['तथ्ये आणि डेटाच्या आधारे युक्तिवाद करता','मूल्ये आणि भावनांच्या आधारे बोलता','प्रथम ऐकता, मग मत मांडता','सर्जनशील मध्यम मार्ग काढता']},
+      {id:'p8',text:'तुमचे मित्र तुम्हाला कसे वर्णन करतील?',opts:['महत्त्वाकांक्षी आणि दृढ','विचारशील आणि विश्लेषणात्मक','मजेशीर आणि उत्स्फूर्त','उबदार आणि सहानुभूतीपूर्ण']},
+    ]},
+    {id:'aptitude',questions:[
+      {id:'a1',text:'यापैकी कोणती गोष्ट तुम्हाला सर्वात सोपी वाटते?',opts:['गणिताचे प्रश्न सोडवणे','निबंध किंवा कथा लिहिणे','चित्र काढणे, डिझाइन करणे किंवा बांधणे','संकल्पना इतरांना स्पष्टपणे समजावणे']},
+      {id:'a2',text:'तुम्ही यात सर्वात चांगले आहात:',opts:['नमुने आणि संख्या ओळखणे','माहिती लक्षात ठेवणे आणि विश्लेषण करणे','गोष्टी 3D मध्ये कल्पना करणे','लोक आणि त्यांच्या भावना समजून घेणे']},
+      {id:'a3',text:'तुम्ही स्वाभाविकपणे कोणत्या विषयात सर्वोत्तम आहात?',opts:['गणित किंवा भौतिकशास्त्र','इतिहास, भूगोल किंवा साहित्य','कला, संगणक विज्ञान किंवा व्यावहारिक विषय','जीवशास्त्र, मानसशास्त्र किंवा सामाजिक अभ्यास']},
+      {id:'a4',text:'जेव्हा तुम्ही काहीतरी जटिल वाचता, तेव्हा तुम्ही:',opts:['ते तार्किक चरणांमध्ये विभागता','मोठी कथा किंवा युक्तिवाद शोधता','ते आकृती किंवा फ्लोचार्ट म्हणून कल्पना करता','ते लोकांवर कसा परिणाम करते याचा विचार करता']},
+      {id:'a5',text:'कोणते काम तुम्हाला सर्वात मजेदार वाटते?',opts:['एखादे कठीण कोडे किंवा समीकरण सोडवणे','परीक्षण किंवा भाषण लिहिणे','पोस्टर डिझाइन करणे किंवा प्रोटोटाइप बनवणे','फंडरेझर आयोजित करणे किंवा मित्राला मदत करणे']},
+      {id:'a6',text:'तुमचे सर्वात मजबूत कौशल्य आहे:',opts:['संख्यात्मक तर्क','तोंडी संवाद','अवकाशीय किंवा दृश्य विचार','आंतरवैयक्तिक आणि भावनिक बुद्धिमत्ता']},
+      {id:'a7',text:'तुम्ही नवीन सॉफ्टवेअर किंवा तंत्रज्ञान किती लवकर शिकता?',opts:['खूप लवकर — मला टेक एक्सप्लोर करायला आवडते','बऱ्यापैकी लवकर जर आधी वाचले तर','चुका करत शिकतो — हाताने करून','कोणाला मार्गदर्शन करण्यास सांगणे पसंत करतो']},
+      {id:'a8',text:'कोणते काम तुम्ही सर्वात वेगाने पूर्ण करता?',opts:['गणना किंवा तर्क कोडी','वाचन आकलन किंवा लेखन कार्ये','चित्रकाम, कोडिंग किंवा बांधकाम','गट चर्चा किंवा मदत कार्ये']},
+    ]},
+    {id:'interest',questions:[
+      {id:'i1',text:'यापैकी कोणते तुम्हाला सर्वात रोमांचक वाटते?',opts:['स्वतःचे स्टार्टअप चालवणे','वैज्ञानिक संशोधन करणे','कला, संगीत किंवा मीडिया तयार करणे','समुदायांना मदत करणे किंवा शिकवणे']},
+      {id:'i2',text:'तुम्ही कुठे काम करायला आवडेल?',opts:['वेगवान कॉर्पोरेट कार्यालय','विद्यापीठ किंवा संशोधन प्रयोगशाळा','स्टुडिओ, टेक कंपनी किंवा सर्जनशील एजन्सी','रुग्णालय, शाळा किंवा स्वयंसेवी संस्था']},
+      {id:'i3',text:'तुमच्या भविष्यातील करिअरमध्ये सर्वात महत्त्वाचे काय आहे?',opts:['उच्च उत्पन्न आणि प्रतिष्ठा','शोध आणि ज्ञान','सर्जनशील अभिव्यक्ती आणि प्रभाव','मदत करणे आणि फरक करणे']},
+      {id:'i4',text:'कोणत्या विषयावर तुम्ही तासनतास बोलू शकता?',opts:['व्यवसाय, पैसा किंवा चालू घडामोडी','विज्ञान, अंतराळ किंवा गोष्टी कशा काम करतात','तंत्रज्ञान, डिझाइन, गेमिंग किंवा संस्कृती','लोक, समाज, मानसिक आरोग्य किंवा शिक्षण']},
+      {id:'i5',text:'तुमच्या आदर्श कामात समाविष्ट आहे:',opts:['महत्त्वाचे निर्णय घेणे आणि संघाचे नेतृत्व करणे','संशोधन, चाचणी आणि उत्तरे शोधणे','बांधणे, डिझाइन करणे किंवा सामग्री तयार करणे','लोकांची काळजी घेणे, मार्गदर्शन किंवा शिक्षण देणे']},
+      {id:'i6',text:'शनिवारी तुम्ही काय करणे पसंत कराल?',opts:['व्यवसाय किंवा उद्योजकता कार्यशाळेत सहभागी होणे','विज्ञान संग्रहालय किंवा टेक एक्सपोला भेट देणे','कला प्रदर्शन किंवा हॅकाथॉनला जाणे','स्वयंसेवा किंवा सामाजिक जागरूकता कार्यक्रमात सहभागी होणे']},
+      {id:'i7',text:'जर तुमच्याकडे ₹10 लाख गुंतवायला असतील, तर तुम्ही:',opts:['व्यवसाय सुरू कराल','संशोधन प्रकल्पाला निधी द्याल','उत्पाद किंवा सर्जनशील उपक्रम बांधाल','सामाजिक कारणासाठी दान कराल']},
+      {id:'i8',text:'कोणती भूमिका तुमच्या स्वप्नातील नोकरीसारखी वाटते?',opts:['CEO, उद्योजक किंवा व्यवस्थापक','शास्त्रज्ञ, डॉक्टर किंवा संशोधक','अभियंता, डिझायनर किंवा डेव्हलपर','शिक्षक, समुपदेशक किंवा सामाजिक कार्यकर्ता']},
+    ]},
+    {id:'learning',questions:[
+      {id:'l1',text:'तुम्ही सर्वोत्तम कधी शिकता?',opts:['जेव्हा तुम्ही वाचता किंवा तपशीलवार नोट्स घेता','जेव्हा तुम्ही आकृत्या, चार्ट किंवा व्हिडिओ पाहता','जेव्हा तुम्ही स्वतः हाताने करता','जेव्हा तुम्ही कोणाशी चर्चा करता']},
+      {id:'l2',text:'परीक्षेची तयारी करताना तुम्ही काय पसंत करता?',opts:['नोट्स लिहिणे आणि पुन्हा वाचणे','माइंड मॅप, रंग कोडिंग आणि फ्लॅशकार्ड','मागील प्रश्नपत्रिका सोडवणे आणि सराव करणे','विषय मित्र किंवा कुटुंबाला शिकवणे']},
+      {id:'l3',text:'तुम्हाला गोष्टी सर्वात चांगल्या आठवतात जेव्हा त्या:',opts:['स्पष्ट आणि तार्किकपणे लिहिलेल्या असतात','चित्रांसह किंवा दृश्यांसह दाखवल्या जातात','तुम्ही शारीरिकरित्या केलेल्या गोष्टींशी जोडलेल्या असतात','कथा किंवा संभाषणातून समजावल्या जातात']},
+      {id:'l4',text:'वर्गात कोणती शिक्षण पद्धती तुम्हाला सर्वाधिक मदत करते?',opts:['तपशीलवार संरचित नोट्स देणारा शिक्षक','आकृत्या आणि व्हिडिओ वापरणारा','थेट प्रात्यक्षिके आणि प्रयोग करणारा','वर्ग चर्चेला प्रोत्साहन देणारा']},
+      {id:'l5',text:'नवीन शहरात रस्ता हरवला तर तुम्ही:',opts:['नकाशा वाचाल किंवा लिखित दिशा फॉलो कराल','दृश्य नकाशांसह GPS वापराल','इकडे-तिकडे फिरत समजून घ्याल','स्थानिक व्यक्तीला रस्ता विचाराल']},
+      {id:'l6',text:'एकट्याने अभ्यास करताना तुम्ही किती वेळ लक्ष केंद्रित करू शकता?',opts:['खूप वेळ — सखोल अभ्यास आवडतो','बऱ्यापैकी वेळ जर दृश्य सामग्री असेल','कमी वेळ — ब्रेक आणि उपक्रम हवेत','मध्यम वेळ — कोणासोबत अभ्यास हवा']},
+    ]},
+    {id:'skills',questions:[
+      {id:'s1',text:'यापैकी कोणती गोष्ट तुम्हाला सर्वात स्वाभाविकपणे जमते?',opts:['गोष्टी व्यवस्थित करणे आणि नियोजन करणे','डेटा विश्लेषण करणे आणि चुका शोधणे','काहीतरी नवीन निर्माण करणे','इतरांना प्रेरित किंवा उत्साहित करणे']},
+      {id:'s2',text:'एखादा प्रकल्प घेताना इतर तुमच्यावर अवलंबून असतात:',opts:['सर्व काही वेळेवर ठेवण्यासाठी','अचूकता, संशोधन आणि गुणवत्तेसाठी','नवीन कल्पना आणि सर्जनशील अंमलबजावणीसाठी','संघातील सामंजस्य आणि प्रेरणेसाठी']},
+      {id:'s3',text:'यापैकी तुम्ही काय केले किंवा काय आनंद घेतला?',opts:['क्लब, संघ किंवा छोटी पुढाकार सुरू केली','मॉडेल बांधले, कोड केले किंवा विज्ञान प्रकल्प केला','कला, संगीत, व्हिडिओ किंवा सामग्री तयार केली','मित्रांना मार्गदर्शन केले, शिकवले किंवा मदत केली']},
+      {id:'s4',text:'तुमची सर्वात मोठी शक्ती आहे:',opts:['नेतृत्व आणि संघटन','गंभीर विचार आणि तर्क','सर्जनशीलता आणि नवकल्पना','सहानुभूती आणि संवाद']},
+      {id:'s5',text:'शाळेतील सादरीकरणात तुमचा सर्वात मजबूत भाग:',opts:['स्पष्ट रचना आणि सादरीकरण','संशोधनाची खोली आणि अचूकता','डिझाइन आणि दृश्य आकर्षण','प्रेक्षकांशी जोडण्याचा मार्ग']},
+      {id:'s6',text:'तुम्ही कोणते कौशल्य सर्वाधिक विकसित करू इच्छिता?',opts:['व्यवसाय धोरण आणि व्यवस्थापन','डेटा विज्ञान किंवा तांत्रिक कौशल्ये','डिझाइन, कोडिंग किंवा कलात्मक कौशल्ये','संवाद किंवा सामाजिक प्रभाव कौशल्ये']},
+    ]}
+  ]
+};
+
+function setLang(l,btn){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');updateStaticText();if(document.getElementById('test-view').style.display!=='none')renderSection();}
+function updateStaticText(){const t=tx[lang];document.getElementById('title-main').textContent=t.titleMain;document.getElementById('title-sub').textContent=t.titleSub;document.getElementById('lbl-name').textContent=t.lblName;document.getElementById('lbl-class').textContent=t.lblClass;document.getElementById('lbl-school').textContent=t.lblSchool;document.getElementById('lbl-phone').textContent=t.lblPhone;document.getElementById('lbl-stream').textContent=t.lblStream;document.getElementById('start-btn').textContent=t.startBtn;}
+function startTest(){const nm=document.getElementById('s-name').value.trim(),cl=document.getElementById('s-class').value,sc=document.getElementById('s-school').value.trim(),ph=document.getElementById('s-phone').value.trim();if(!nm||!cl||!sc||!ph){alert(tx[lang].alertInfo);return;}studentInfo={name:nm,class:cl,school:sc,phone:ph,stream:document.getElementById('s-stream').value||'Not decided',language:lang,timestamp:new Date().toLocaleString('en-IN',{timeZone:'Asia/Kolkata'})};document.getElementById('info-view').style.display='none';document.getElementById('test-view').style.display='block';renderSection();}
+function renderSection(){const secs=sections[lang],sec=secs[current],t=tx[lang];document.getElementById('section-label').textContent=t.secLabels[current];document.getElementById('progress').style.width=(current/secs.length*100)+'%';document.getElementById('step-info').textContent=t.section+' '+(current+1)+' '+t.of+' '+secs.length;document.getElementById('prev-btn').disabled=current===0;const isLast=current===secs.length-1;document.getElementById('next-btn').innerHTML=isLast?t.submit:'<span>'+t.next+'</span> →';document.getElementById('questions-container').innerHTML=sec.questions.map(q=>`<div class="card"><div class="q-text">${q.text}</div><div class="options">${q.opts.map((o,i)=>`<div class="opt${answers[q.id]===i?' selected':''}" onclick="selectOpt('${q.id}',${i},this)"><div class="radio-circle"><div class="radio-dot"></div></div>${o}</div>`).join('')}</div></div>`).join('');window.scrollTo({top:0,behavior:'smooth'});}
+function selectOpt(qid,val,el){answers[qid]=val;document.querySelectorAll(`[onclick*="'${qid}'"]`).forEach(e=>e.classList.remove('selected'));el.classList.add('selected');}
+function allAnswered(){return sections[lang][current].questions.every(q=>answers[q.id]!==undefined);}
+function prevSection(){if(current>0){current--;renderSection();}}
+function nextSection(){if(!allAnswered()){alert(tx[lang].alertAnswer);return;}if(current<sections[lang].length-1){current++;renderSection();}else submitTest();}
+function buildAnswerSummary(){return sections['en'].map((sec,si)=>{const labels=['PERSONALITY','APTITUDE','CAREER INTEREST','LEARNING STYLE','SKILLS'];return`=== ${labels[si]} ===\n`+sec.questions.map(q=>{const aIdx=answers[q.id];return`${q.text}\n→ ${aIdx!==undefined?q.opts[aIdx]:'Not answered'}`;}).join('\n\n');}).join('\n\n');}
+
+function computeReport(){
+  const dims={personality:[0,0,0,0],aptitude:[0,0,0,0],interest:[0,0,0,0],learning:[0,0,0,0],skills:[0,0,0,0]};
+  const secIds=[['p1','p2','p3','p4','p5','p6','p7','p8'],['a1','a2','a3','a4','a5','a6','a7','a8'],['i1','i2','i3','i4','i5','i6','i7','i8'],['l1','l2','l3','l4','l5','l6'],['s1','s2','s3','s4','s5','s6']];
+  const dimKeys=['personality','aptitude','interest','learning','skills'];
+  secIds.forEach((ids,si)=>{ids.forEach(id=>{const v=answers[id];if(v!==undefined)dims[dimKeys[si]][v]++;});});
+  function dominant(arr){let m=0,mi=0;arr.forEach((v,i)=>{if(v>m){m=v;mi=i;}});return mi;}
+  const pIdx=dominant(dims.personality);
+  const aIdx=dominant(dims.aptitude);
+  const iIdx=dominant(dims.interest);
+  const lIdx=dominant(dims.learning);
+  const sIdx=dominant(dims.skills);
+
+  // ── WEIGHTED STREAM SCORING ─────────────────────────────────────────
+  // Stream 0 = Commerce   Stream 1 = Science PCB
+  // Stream 2 = Science PCM/Design   Stream 3 = Arts/Humanities
+  //
+  // Weight:  Interest 40%  +  Aptitude 30%  +  Personality 30%
+  //
+  // How each answer maps to a stream:
+  //   Index 0 answers → Enterprising/Numerical/Commerce  → Stream 0
+  //   Index 1 answers → Analytical/Verbal/Science        → Stream 1  (PCB)
+  //   Index 2 answers → Creative/Spatial/Tech            → Stream 2  (PCM/Design)
+  //   Index 3 answers → Empathetic/Social/Arts           → Stream 3
+  //
+  // Special override rule:
+  //   If aptitude index is 0 (Numerical-Logical) AND interest index is 1
+  //   (science/research) → override to PCM not PCB (maths-heavy science)
+  //   If aptitude index is 3 (Social-Emotional) AND interest index is 1
+  //   → keep PCB (biology/medicine leaning)
+
+  const streamScores=[0,0,0,0];
+
+  // Interest contributes 40% — scale raw counts by 0.4 per question answered
+  dims.interest.forEach((v,i)=>{ streamScores[i]+=v*0.4; });
+
+  // Aptitude contributes 30%
+  dims.aptitude.forEach((v,i)=>{ streamScores[i]+=v*0.3; });
+
+  // Personality contributes 30%
+  dims.personality.forEach((v,i)=>{ streamScores[i]+=v*0.3; });
+
+  // Find winning stream index by highest weighted score
+  let stIdx=0;
+  streamScores.forEach((v,i)=>{ if(v>streamScores[stIdx]) stIdx=i; });
+
+  // Special override: if top aptitude is Numerical-Logical (0) AND
+  // stream would be PCB (1) — switch to PCM/Design (2) since maths dominates
+  if(stIdx===1 && aIdx===0){ stIdx=2; }
+
+  // Special override: if top aptitude is Social-Emotional (3) AND
+  // stream would be PCM/Design (2) — switch to Arts/Humanities (3)
+  if(stIdx===2 && aIdx===3){ stIdx=3; }
+
+  const personalities=[
+    {type:'Enterprising Leader',tagline:'Driven, decisive and built to lead',color:'#7F3FBF',bg:'#F3EAFF',desc:'You are naturally ambitious and thrive when you are in charge. You enjoy taking initiative, organising people and turning ideas into action. You are confident in making decisions and are energised by challenges and competition. Your friends see you as motivated, bold and someone who gets things done.'},
+    {type:'Analytical Thinker',tagline:'Logical, precise and always curious',color:'#0047FF',bg:'#E8EEFF',desc:'You are a careful, methodical thinker who loves understanding how things work. You prefer to analyse information thoroughly before making decisions and you have a natural talent for spotting patterns and inconsistencies. You are dependable, accurate and excel in structured environments that reward deep thinking.'},
+    {type:'Creative Explorer',tagline:'Imaginative, expressive and original',color:'#D85A30',bg:'#FFF0EA',desc:'You are a natural innovator who thrives on creativity and new ideas. You enjoy expressing yourself, trying new approaches and thinking outside the box. You get energised by variety, design and the freedom to experiment. Others look to you for fresh perspectives and out-of-the-box solutions.'},
+    {type:'Empathetic Helper',tagline:'Caring, people-first and deeply intuitive',color:'#1D9E75',bg:'#E6FAF4',desc:'You are warm, emotionally intelligent and genuinely motivated by helping others. You are a natural listener who builds strong relationships and creates safe, supportive environments. You are deeply aware of how others feel and find meaning in making a real difference in people\'s lives.'}
+  ];
+  const aptitudes=[
+    {type:'Numerical-Logical',color:'#0047FF',desc:'You have a strong ability to work with numbers, data and logical reasoning. You excel at breaking problems into structured steps and finding precise solutions. Mathematics, statistics and analytical fields come naturally to you.'},
+    {type:'Verbal-Linguistic',color:'#7F3FBF',desc:'You have exceptional ability with language, reading and communication. You think in words, express ideas clearly and have a natural talent for writing, storytelling and persuasion. Subjects involving analysis of text and ideas suit you well.'},
+    {type:'Spatial-Technical',color:'#D85A30',desc:'You have a strong ability to visualise objects, systems and designs in your mind. You think in pictures and diagrams, and you enjoy building, designing or coding things. Technical and creative fields that involve making or constructing come naturally to you.'},
+    {type:'Social-Emotional',color:'#1D9E75',desc:'You have exceptional ability to understand and connect with people. You read emotions accurately, communicate with empathy and naturally build trust. Fields involving counselling, teaching, leadership or community work align with your strengths.'}
+  ];
+  const learningStyles=[
+    {type:'Read-Write Learner',color:'#0047FF',tips:['Make detailed written notes in your own words after each chapter.','Rewrite key concepts as summaries before exams - writing reinforces memory for you.','Use written flashcards and to-do lists to organise your study schedule.']},
+    {type:'Visual Learner',color:'#7F3FBF',tips:['Convert notes into mind maps, flowcharts and colour-coded diagrams.','Watch video explanations on YouTube or Khan Academy before reading the textbook.','Use different colours for different topics and draw concept maps to connect ideas.']},
+    {type:'Kinaesthetic Learner',color:'#D85A30',tips:['Learn by doing - attempt problems and experiments before reading theory.','Take breaks every 30-40 minutes and do something physical to reset your focus.','Use past papers and mock tests as your primary study method - practice over reading.']},
+    {type:'Auditory-Social Learner',color:'#1D9E75',tips:['Study with a friend or in a small group and discuss concepts out loud.','Teach topics to a family member or friend - explaining reinforces your understanding.','Record yourself summarising key points and listen back while commuting or relaxing.']}
+  ];
+  const skillSets=[
+    {top:'Leadership & Organisation',color:'#7F3FBF',skills:[{name:'Strategic Planning',desc:'You naturally think ahead, set goals and create systems to achieve them efficiently.'},{name:'Team Management',desc:'You are skilled at coordinating people, delegating tasks and keeping groups on track.'},{name:'Decision Making',desc:'You are comfortable taking ownership of decisions even under pressure or uncertainty.'}]},
+    {top:'Critical Thinking & Research',color:'#0047FF',skills:[{name:'Analytical Reasoning',desc:'You break down complex problems into logical parts and identify the best solution systematically.'},{name:'Research & Accuracy',desc:'You are thorough, detail-oriented and committed to getting facts right before acting.'},{name:'Problem Solving',desc:'You enjoy tackling difficult challenges and finding efficient, well-reasoned solutions.'}]},
+    {top:'Creativity & Innovation',color:'#D85A30',skills:[{name:'Creative Thinking',desc:'You generate original ideas and approach challenges from angles others might not consider.'},{name:'Design & Execution',desc:'You can take a concept from idea to finished product with strong aesthetic and practical sense.'},{name:'Adaptability',desc:'You thrive in changing environments and quickly find new approaches when plans shift.'}]},
+    {top:'Communication & Empathy',color:'#1D9E75',skills:[{name:'Interpersonal Communication',desc:'You connect with people naturally, listen actively and express yourself with clarity and warmth.'},{name:'Emotional Intelligence',desc:'You understand your own emotions and those of others, which helps you navigate relationships well.'},{name:'Collaboration',desc:'You work exceptionally well in teams, creating harmony and bringing out the best in others.'}]}
+  ];
+  const streams=[
+    {name:'Commerce / Business Studies',color:'#7F3FBF',bg:'#F3EAFF',exams:'CA Foundation, CUET, CLAT, CMA Foundation, BBA Entrance Exams',reason:'Your entrepreneurial drive, interest in leadership and aptitude for planning make Commerce the ideal stream. You will thrive in subjects like Business Studies, Economics and Accountancy which directly feed into business and finance careers.'},
+    {name:'Science (PCB)',color:'#0047FF',bg:'#E8EEFF',exams:'NEET UG, CUET, MHT-CET, AIIMS, JIPMER, CMC Vellore',reason:'Your scientific curiosity, analytical mindset and interest in research and medicine make Science with Physics, Chemistry and Biology the perfect fit. PCB opens doors to medicine, healthcare, research and life sciences.'},
+    {name:'Science (PCM) / Design',color:'#D85A30',bg:'#FFF0EA',exams:'JEE Main, NIFT Entrance, NID Entrance, UCEED, CUET, MHT-CET',reason:'Your creative thinking combined with technical aptitude makes Science or Design the right path. Whether it is Computer Science, Architecture or Product Design, you will excel where creativity meets technology.'},
+    {name:'Arts / Humanities',color:'#1D9E75',bg:'#E6FAF4',exams:'CUET, CLAT, DU Entrance, Christ University Entrance, TISSNET',reason:'Your empathy, communication skills and passion for people and society make Arts or Humanities your natural home. Subjects like Psychology, Sociology and Political Science will deeply engage you and open meaningful career doors.'}
+  ];
+  const careerSets=[
+    [{title:'Entrepreneur / Business Manager',emoji:'💼',why:'Your leadership instincts, decisiveness and drive to achieve make entrepreneurship a natural calling. You are motivated by results, enjoy managing people and have the resilience needed to build something from scratch.',path:'BBA / B.Com + MBA | IIMs, NMIMS, Symbiosis, SP Jain | CAT, XAT, SNAP',salary:'Fresher: Rs.4-8 LPA | Experienced: Rs.20-60 LPA'},
+     {title:'Marketing & Brand Manager',emoji:'📣',why:'Your confident communication, strategic thinking and ability to read situations make you a natural marketer. You enjoy persuading people and crafting narratives that resonate and drive action.',path:'BBA / BMM + MBA Marketing | IIMs, MICA Ahmedabad, Symbiosis | CAT, MICAT',salary:'Fresher: Rs.4-7 LPA | Experienced: Rs.15-40 LPA'},
+     {title:'Investment Banker / Financial Analyst',emoji:'📊',why:'Your ambition, numerical aptitude and comfort with high-pressure decision-making align perfectly with finance. You enjoy working with data to drive big outcomes and financial impact.',path:'B.Com / BBA + CA or CFA or MBA Finance | Top IIMs | CAT, CA Foundation',salary:'Fresher: Rs.6-12 LPA | Experienced: Rs.25-80 LPA'}],
+    [{title:'Doctor / Medical Professional',emoji:'🩺',why:'Your genuine curiosity about life sciences, care for people and commitment to making a difference make medicine a powerful calling. You have the empathy and discipline that the medical profession demands.',path:'MBBS via NEET UG | AIIMS, AFMC, KEM Mumbai, CMC Vellore, JIPMER',salary:'Fresher: Rs.6-10 LPA | Experienced: Rs.20-80 LPA'},
+     {title:'Medical Researcher / Scientist',emoji:'🔬',why:'Your scientific curiosity, analytical thinking and love of discovery make research in biology, medicine or life sciences a natural fit. You enjoy finding answers that help people live healthier lives.',path:'BSc Biology / Biotechnology + MSc + PhD | IISc, TIFR, AIIMS, IITs',salary:'Fresher: Rs.4-8 LPA | Experienced: Rs.12-30 LPA'},
+     {title:'Pharmacist / Biotechnologist',emoji:'💊',why:'Your interest in science, health and how things work at a molecular level makes pharmacy or biotechnology an exciting and impactful career path.',path:'B.Pharm / B.Tech Biotechnology | NIPER, Manipal, Amity | NEET, CUET',salary:'Fresher: Rs.3-6 LPA | Experienced: Rs.10-25 LPA'}],
+    [{title:'Software Engineer / Developer',emoji:'💻',why:'Your technical aptitude, creative thinking and enjoyment of building things make software engineering a natural fit. You enjoy solving problems by creating systems and tools that work elegantly.',path:'B.Tech CS / BCA | IITs, NITs, BITS, VIT | JEE Main, VITEEE',salary:'Fresher: Rs.5-12 LPA | Experienced: Rs.20-60 LPA'},
+     {title:'UI/UX Designer',emoji:'🎨',why:'Your visual thinking, creativity and ability to understand how people interact with things make design a compelling path. You enjoy making complex things feel simple and beautiful.',path:'BDes / B.Tech + Portfolio | NID, NIFT, IIT IDC | NID DAT, UCEED, NIFT',salary:'Fresher: Rs.4-8 LPA | Experienced: Rs.15-40 LPA'},
+     {title:'Game Developer / Animator',emoji:'🎮',why:'Your imagination, technical creativity and passion for immersive experiences make game development or animation an exciting career that combines your best strengths.',path:'BDes / BCA / BSc Animation | Arena Animation, Whistling Woods, NID',salary:'Fresher: Rs.3-7 LPA | Experienced: Rs.12-35 LPA'}],
+    [{title:'Psychologist / Counsellor',emoji:'🧠',why:'Your deep empathy, listening skills and genuine care for others make psychology a perfect match. You naturally create safe spaces where people feel heard and supported through challenges.',path:'BA/BSc Psychology + MA/MSc + RCI Licensure | Delhi University, Christ, TISS',salary:'Fresher: Rs.3-6 LPA | Experienced: Rs.10-25 LPA'},
+     {title:'Teacher / Professor',emoji:'📚',why:'Your communication skills, patience and desire to make a difference align perfectly with education. You explain things clearly and genuinely enjoy seeing others grow and succeed.',path:'BA/BSc + B.Ed or Integrated B.Ed | For higher education: MA + NET/SET + PhD',salary:'Fresher: Rs.3-6 LPA | Experienced: Rs.8-20 LPA'},
+     {title:'Social Worker / NGO Leader',emoji:'🤝',why:'Your empathy, collaborative nature and passion for community impact make social work deeply meaningful. You are motivated by creating systemic change and uplifting others around you.',path:'BSW + MSW | TISS Mumbai, Delhi School of Social Work, Christ University',salary:'Fresher: Rs.3-5 LPA | Experienced: Rs.8-18 LPA'}]
+  ];
+
+  return {
+    p: personalities[pIdx],
+    a: aptitudes[aIdx],
+    l: learningStyles[lIdx],
+    sk: skillSets[sIdx],
+    st: streams[stIdx],
+    careers: careerSets[stIdx]
+  };
+}
+
+function buildEmailText(data){
+  const {p,a,l,sk,st,careers}=data;
+  const sep='='.repeat(48);
+  const line='-'.repeat(48);
+  return 'TIZZLE BY PRIYANKA BARGE\nCAREER ASSESSMENT REPORT\n'+sep+'\nStudent : '+studentInfo.name+'\nClass   : '+studentInfo.class+'\nSchool  : '+studentInfo.school+'\nPhone   : '+studentInfo.phone+'\nStream  : '+studentInfo.stream+'\nDate    : '+studentInfo.timestamp+'\n'+sep+'\n\n1. PERSONALITY TYPE\nType    : '+p.type+'\nTagline : '+p.tagline+'\n\n'+p.desc+'\n\n'+line+'\n\n2. APTITUDE PROFILE\nType    : '+a.type+'\n\n'+a.desc+'\n\n'+line+'\n\n3. LEARNING STYLE\nStyle   : '+l.type+'\n\nStudy Tips:\n  1. '+l.tips[0]+'\n  2. '+l.tips[1]+'\n  3. '+l.tips[2]+'\n\n'+line+'\n\n4. CORE SKILLS & STRENGTHS\nDominant: '+sk.top+'\n\n  Skill 1: '+sk.skills[0].name+'\n  '+sk.skills[0].desc+'\n\n  Skill 2: '+sk.skills[1].name+'\n  '+sk.skills[1].desc+'\n\n  Skill 3: '+sk.skills[2].name+'\n  '+sk.skills[2].desc+'\n\n'+line+'\n\n5. RECOMMENDED STREAM\nStream  : '+st.name+'\n\n'+st.reason+'\n\nTarget Exams: '+st.exams+'\n\n'+line+'\n\n6. TOP 3 CAREER PATHS\n\nCareer Path 1: '+careers[0].title+'\nWhy: '+careers[0].why+'\nPath: '+careers[0].path+'\nSalary: '+careers[0].salary+'\n\nCareer Path 2: '+careers[1].title+'\nWhy: '+careers[1].why+'\nPath: '+careers[1].path+'\nSalary: '+careers[1].salary+'\n\nCareer Path 3: '+careers[2].title+'\nWhy: '+careers[2].why+'\nPath: '+careers[2].path+'\nSalary: '+careers[2].salary+'\n\n'+sep+'\nTizzle by Priyanka Barge | Coach: 9067290738\n'+sep;
+}
+
+async function submitTest(){
+  document.getElementById('test-view').style.display='none';
+  document.getElementById('loading-view').style.display='block';
+  document.getElementById('loading-msg').textContent=tx[lang].loadingMsg;
+  document.getElementById('loading-sub').textContent=tx[lang].loadingSub;
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // Generate rule-based report data
+  const data=computeReport();
+
+  // Build payload to send to Google Apps Script
+  const payload={
+    student:{
+      name:studentInfo.name,
+      class:studentInfo.class,
+      school:studentInfo.school,
+      phone:studentInfo.phone,
+      stream:studentInfo.stream,
+      timestamp:studentInfo.timestamp
+    },
+    report:{
+      p:{type:data.p.type,tagline:data.p.tagline,desc:data.p.desc,color:data.p.color,bg:data.p.bg},
+      a:{type:data.a.type,desc:data.a.desc,color:data.a.color},
+      l:{type:data.l.type,tips:data.l.tips,color:data.l.color},
+      sk:{top:data.sk.top,color:data.sk.color,skills:data.sk.skills},
+      st:{name:data.st.name,reason:data.st.reason,exams:data.st.exams,color:data.st.color,bg:data.st.bg},
+      careers:data.careers.map(c=>({title:c.title,emoji:c.emoji,why:c.why,path:c.path,salary:c.salary}))
+    }
+  };
+
+  // Send to Google Apps Script which generates PDF and emails it
+  try{
+    const GAS_URL='https://script.google.com/macros/s/AKfycbwNFKvURTv0Mh-sgFkCLeQnSPC2fqy0w5MuyOuBcSOTtfaItPvnTpw2np7svk6b84xM/exec';
+    const res=await fetch(GAS_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(payload)});
+    const result=await res.json();
+    if(!result.success)console.error('GAS error:',result.error);
+  }catch(e){console.error('Submit error:',e);}
+
+  document.getElementById('loading-view').style.display='none';
+  const sv=document.getElementById('success-view');
+  sv.style.display='block';
+  const t=tx[lang];
+  document.getElementById('success-title').textContent=t.successTitle;
+  document.getElementById('success-msg').innerHTML=t.successMsg;
+  document.getElementById('contact-label').textContent=t.contactLabel;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
